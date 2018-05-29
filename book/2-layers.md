@@ -150,7 +150,9 @@ pl.ylabel('Loss')
 pl.yscale('log')
 ```
 运行结果如下：
+
 ![Loss vs. Time](figs/ch2/fig1.png)
+
 ### 1.3 线性层运用和特点探讨
 ## 2. 递归层
 ### 1.1 什么是递归层
