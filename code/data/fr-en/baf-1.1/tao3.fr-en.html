@@ -1,0 +1,1031 @@
+<HTML>
+<HEAD>
+<TITLE>Alignment of </TITLE>
+</HEAD>
+<BODY>
+<P ALIGN=CENTER><TABLE BORDER=0 CELLSPACING=15>
+<TR VALIGN=TOP><TD><FONT COLOR=black>Réaccentuation automatique 
+de textes français</FONT>
+
+<TD><FONT COLOR=black>Automatic Restoration of Accents
+in French Text</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=red>
+<P>Michel Simard</FONT>
+
+<TD><FONT COLOR=red>
+<P>Michel Simard</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=green>
+<P>simard@citi.doc.ca</FONT>
+
+<TD><FONT COLOR=green>
+<P>simard@citi.doc.ca</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=yellow>
+<P>Industrie Canada
+Centre d'Innovation en Technologies de l'Information
+1575 Chomedey
+Laval (Québec)
+CANADA H7V 2X2</FONT>
+
+<TD><FONT COLOR=yellow>
+<P>Industry Canada
+Centre for Information Technology Innovation (CITI)
+1575 Chomedey Blvd.
+Laval, Quebec
+Canada H7V 2X2</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>1</FONT>
+<FONT COLOR=white>	Introduction</FONT>
+
+<TD><FONT COLOR=blue>
+<P>1</FONT>
+<FONT COLOR=white>	Introduction</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=black>
+<P>Les travaux présentés ici s'inscrivent dans le cadre du projet Robustesse, mené par l'équipe de 
+traduction assistée par ordinateur (TAO) du CITI.</FONT>
+<FONT COLOR=red> Ce projet vise à élaborer des méthodes et des 
+outils de traitement des langues naturelles robustes :</FONT>
+<FONT COLOR=green> plusieurs systèmes de TALN vont soit refuser 
+de traiter des textes comportant des erreurs ou des phénomènes étrangers à leur propre ensemble 
+de connaissances, soit afficher un comportement imprévisible dans ces circonstances.</FONT>
+<FONT COLOR=yellow> À l'opposé, 
+un système robuste se comportera alors de façon prévisible et utile.</FONT>
+
+<TD><FONT COLOR=black>
+<P>The research presented in this report is part of the Robustness Project conducted by the Computer-
+Aided Translation (CAT) team at CITI.</FONT>
+<FONT COLOR=red> This project is intended to develop methods and tools for the 
+"robust" processing of natural languages:</FONT>
+<FONT COLOR=green> many natural-language processing (NLP) systems either 
+refuse to process texts that contain errors or elements that are foreign to their particular knowledge 
+base, or behave unpredictably under such circumstances.</FONT>
+<FONT COLOR=yellow> In contrast, a "robust" system will behave 
+in a predictable and useful manner.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>Les textes français sans accents (marques diacritiques) constituent un exemple typique et 
+particulièrement répandu des problèmes auxquels font face les systèmes de TALN.</FONT>
+<FONT COLOR=white> C'est dans le 
+contexte du courrier électronique (e-mail) qu'on rencontre le plus souvent ce phénomène, qui 
+s'explique de deux façons.</FONT>
+<FONT COLOR=black> Premièrement, le monde de l'informatique a longtemps souffert de 
+l'absence d'une norme suffisamment répandue pour l'encodage des caractères accentués, ce qui 
+a entraîné toute une panoplie de problèmes de transfert et de traitement des texte français.</FONT>
+<FONT COLOR=red> Il n'est 
+d'ailleurs pas rare qu'un des maillons logiciels dans la chaîne de distribution du courrier 
+électronique "désaccentue" délibérément les caractères accentués, afin de prévenir d'éventuels 
+problèmes.</FONT>
+<FONT COLOR=green> Deuxièmement, la saisie au clavier des caractères accentués demeure, encore à ce 
+jour, un exercice ardu, voire acrobatique dans certains cas :</FONT>
+<FONT COLOR=yellow> ici, il s'agit à la fois d'une question de 
+norme et d'une question d'ergonomie.</FONT>
+<FONT COLOR=blue> Le résultat concret, c'est qu'un très grand nombre 
+d'utilisateurs francophones évite systématiquement d'utiliser les caractères accentués, tout du 
+moins pour le courrier électronique.</FONT>
+
+<TD><FONT COLOR=blue>
+<P>Unaccented French texts (i.e., texts without diacritics) are a typical and particularly common 
+example of problems faced by NLP systems.</FONT>
+<FONT COLOR=white> Such problems are most often encountered in an 
+E-mail context. Two factors account for this:</FONT>
+<FONT COLOR=black> First, the computer field has long suffered from a lack 
+of sufficiently widespread standards for encoding accented characters, which has resulted in a 
+plethora of problems in the electronic transfer and processing of French texts.</FONT>
+<FONT COLOR=red> Moreover, it is not 
+uncommon for one of the software links in an E-mail distribution chain to deliberately remove 
+accents in order to avoid subsequent problems.</FONT>
+<FONT COLOR=green> Secondly, keying in accented characters is still a 
+cumbersome activity, at times requiring manual acrobatics.</FONT>
+<FONT COLOR=yellow> This is a matter of both standards and 
+ergonomics.</FONT>
+<FONT COLOR=blue> As a result, a large number of French-speaking users systematically avoid using 
+accented characters, at least when writing E-mail.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=white>
+<P>Si cette situation demeure tolérable en pratique, c'est parce qu'il est extrêmement rare que la 
+disparition des accents rende un texte français incompréhensible pour un humain.</FONT>
+<FONT COLOR=black> D'un point de 
+vue linguistique, l'absence d'accents en français ne fait qu'augmenter le degré relatif d'ambiguïté 
+inhérent à la langue.</FONT>
+<FONT COLOR=red> À la limite, elle ralentit la lecture et suscite un certain inconfort, comme peut 
+le faire, par exemple, la lecture d'un texte rédigé entièrement en majuscules.</FONT>
+
+<TD><FONT COLOR=white>
+<P>If this situation remains tolerable in practice, it is essentially because it is extremely rare that the 
+absence of accents renders a French text incomprehensible to the human reader.</FONT>
+<FONT COLOR=black> From a linguistic 
+point of view, the lack of accents in French simply increases the relative degree of ambiguity 
+inherent in the language.</FONT>
+<FONT COLOR=red> At worst, it slows down reading and proves awkward, much as a text 
+written entirely in capital letters might do.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=green>
+<P>Il n'en demeure pas moins que si le français sans accent est acceptable dans certaines 
+circonstances, il ne l'est pas dans l'usage courant, notamment dans le cas des documents 
+imprimés.</FONT>
+<FONT COLOR=yellow> Par ailleurs, l'absence des accents pose de sérieux problèmes pour le traitement 
+automatique des textes.</FONT>
+<FONT COLOR=blue> Qu'il s'agisse de recherche documentaire, de correction orthographique, 
+grammaticale, stylistique, de traduction automatique, d'interface en langue en naturelle ou de 
+quelqu'autre forme de traitement de la langue, on s'attendra en général à ce que les textes français 
+comportent des accents. D'où l'intérêt pour des méthodes de récupération automatique des 
+accents, ou de réaccentuation automatique.</FONT>
+
+<TD><FONT COLOR=green>
+<P>The fact remains, however, that while unaccented French text may be tolerated under certain 
+circumstances, it is not acceptable in common usage, especially in the case of printed documents.</FONT>
+<FONT COLOR=yellow> 
+Furthermore, unaccented texts pose serious problems for automatic processing.</FONT>
+<FONT COLOR=blue> Whether for 
+purposes of documentary research, spelling, grammar or style checkers, machine translation, 
+natural-language interface, or any other form of language processing, accents are generally 
+required in French texts-hence the interest in methods of automatic accent restoration.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=white>
+<P>En examinant le problème, on constate que la grande majorité des mots d'un texte français 
+s'écrivent naturellement sans accents (envrion 85%), et que pour plus de la moitié des mots qui 
+restent, la forme accentuée correcte peut être déduite de façon déterministe à partir de la forme 
+sans accent.</FONT>
+<FONT COLOR=black> Il en découle que la simple utilisation d'un bon dictionnaire permet de réaccentuer 
+automatiquement un texte sans accent avec un taux de succès de près de 95% (c'est-à-dire qu'on 
+commettra une erreur d'accent à peu près à tous les vingt mots).</FONT>
+
+<TD><FONT COLOR=white>
+<P>An examination of the problem reveals that the vast majority (approximately 85%) of the words in 
+French texts take no accents, and that the correct form of more than half of the remaining words 
+can be deduced deterministically on the basis of the unaccented form.</FONT>
+<FONT COLOR=black> Consequently, with the use 
+of a good dictionary, accents can be restored to an unaccented text with a success rate of nearly 
+95% (i.e., an error in accentuation will occur in approximately every 20 words).</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=red>
+<P>Tout porte à croire qu'on peut atteindre des résultats de beaucoup supérieurs grâce à l'utilisation 
+de modèles de langue plus ou moins sophistiqués, qui seront en mesure de lever les ambiguïtés 
+résultant de l'absence d'accents, en se basant sur des considérations d'ordre linguistique.</FONT>
+<FONT COLOR=green> En 
+particulier, il semble que les modèles de langue dits probabilistes soient particulièrement bien 
+adaptés pour ce genre de tâche, parce qu'ils fournissent un critère de désambiguïsation quantitatif :</FONT>
+<FONT COLOR=yellow> 
+lorsqu'on rencontre une forme sans accent à laquelle peuvent correspondre plusieurs formes 
+valides (portant ou non des accents), on choisit la plus probable, en se basant sur le contexte 
+immédiat et sur un ensemble d'évènements observés antérieurement (le "corpus d'entraînement").</FONT>
+
+<TD><FONT COLOR=red>
+<P>All evidence suggests that much higher results can be attained through the use of moderately 
+sophisticated language models, which will be able to deal with ambiguities resulting from missing 
+accents, on the basis of linguistic considerations.</FONT>
+<FONT COLOR=green> More specifically, it would seem that language 
+models termed probabilistic are particularly well adapted to this sort of task, as they provide a 
+quantitative criterion for resolving ambiguity.</FONT>
+<FONT COLOR=yellow> When the system encounters an unaccented form that 
+could correspond to various valid word forms (that may or may not take accents), it chooses the 
+most probable one on the basis of the immediate context and a set of events observed previously 
+(the training corpus).</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>Notons que cette idée n'est pas entièrement originale :</FONT>
+<FONT COLOR=white> El-Bèze et al. exposent dans [3] une 
+technique de réaccentuation qui s'inspire des mêmes concepts, alors que Yarowsky obtient des 
+résultats comparables dans [6], en combinant différents critères de désambiguïsation statistiques 
+dans un cadre unificateur (les listes de décision).</FONT>
+
+<TD><FONT COLOR=blue>
+<P>Note, however, that this idea is not entirely original.</FONT>
+<FONT COLOR=white> El-Bèze et al. [3] describe an accent-restoration 
+technique that draws upon the same concepts, while Yarowsky has obtained comparable results 
+[6] by combining different criteria for statistical disambiguation within a unifying framework (decision 
+lists).</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=black>
+<P>2</FONT>
+<FONT COLOR=red>	Réaccentuation automatique</FONT>
+
+<TD><FONT COLOR=black>
+<P>2</FONT>
+<FONT COLOR=red>	Automatic Accent Restoration</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=green>
+<P>Nous avons mis au point un programme de réaccentuation automatique, que nous appelons 
+Reacc, basé sur un modèle de langue stochastique.</FONT>
+<FONT COLOR=yellow> Reacc accepte en entrée une chaîne de 
+caractères représentant un texte français sans accent.</FONT>
+<FONT COLOR=blue> Si la chaîne d'entrée contient des accents, 
+on peut bien sûr la désaccentuer :</FONT>
+<FONT COLOR=white> comme à tout caractère accentué ne correspond qu'un seul 
+caractère sans accent, ce processus est entièrement déterministe.</FONT>
+<FONT COLOR=black> Une autre possibilité est de 
+conserver les accents, en prenant pour acquis qu'ils sont corrects.</FONT>
+<FONT COLOR=red> Dans un cas comme dans 
+l'autre, la sortie attendue de Reacc est une chaîne de caractères qui ne diffère de la chaîne d'entrée 
+que par les accents :</FONT>
+<FONT COLOR=green> on s'attend à recevoir en sortie le même texte français, mais correctement 
+accentué.</FONT>
+
+<TD><FONT COLOR=green>
+<P>We have developed an automatic accent restoration program called Reacc. It is based on a 
+stochastic language model.</FONT>
+<FONT COLOR=yellow> Reacc will accept as input a string of characters that represents 
+unaccented French text.</FONT>
+<FONT COLOR=blue> If the input string contains accents, the accents can, of course, be stripped 
+away.</FONT>
+<FONT COLOR=white> Since each accented character can correspond to only one unaccented character, this 
+process is entirely deterministic.</FONT>
+<FONT COLOR=black> Another option is to retain the accents, on the assumption that they 
+are correct.</FONT>
+<FONT COLOR=red> In either case, the output expected from Reacc is a string of characters that differs from 
+the input string solely in terms of accents.</FONT>
+<FONT COLOR=green> The expected output is therefore the same French text, 
+the only difference being that the words are properly accented.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=yellow>
+<P>Reacc procède donc en trois étapes successives : segmentation, génération d'hypothèses et 
+désambiguïsation.</FONT>
+
+<TD><FONT COLOR=yellow>
+<P>Reacc performs three successive operations: segmentation, hypothesis generation and 
+disambiguation.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>L'unité sur laquelle opère Reacc est le mot.</FONT>
+<FONT COLOR=white> L'exercice de segmentation consiste donc à prendre la 
+chaîne d'entrée et à y localiser les frontières entre les mots, incluant les signes de ponctuation, de 
+même que les nombres et autres expressions combinant chiffres et lettres.</FONT>
+<FONT COLOR=black> La segmentation repose 
+sur un ensemble de règles décrivant des connaissances générales sur la structure des textes 
+électroniques.</FONT>
+<FONT COLOR=red> Très peu de ces connaissances sont spécifiques au français.</FONT>
+<FONT COLOR=green> On retrouve quand 
+même une liste d'abréviations et acronymes courants, qui sert à déterminer si un point accolé à une 
+suite de caractères alphabétiques appartient à ce mot, ou agit comme point final.</FONT>
+<FONT COLOR=yellow> On utilise aussi 
+une liste des constructions les plus fréquentes impliquant le tiret et l'apostrophe en français, afin de 
+déterminer s'ils agissent ou non comme frontière de mots : l'école versus aujourd'hui, passe-
+montagne versus pensez-vous.</FONT>
+
+<TD><FONT COLOR=blue>
+<P>The unit on which the program operates is the word.</FONT>
+<FONT COLOR=white> Therefore, the segmentation process consists 
+in taking the input string and locating word boundaries, including punctuation marks, numbers and 
+number/letter combinations.</FONT>
+<FONT COLOR=black> Segmentation relies almost exclusively on language-independant 
+data, i.e. a set of rules encoding general knowledge about the structure of electronic texts.</FONT>
+<FONT COLOR=red></FONT>
+<FONT COLOR=green> One 
+exception to this is a list of French abbreviations and current acronyms, which is used to determine 
+whether a period following a string of alphabetic characters (i.e., a word) belongs to the string itself 
+or serves to end a sentence.</FONT>
+<FONT COLOR=yellow> Also, a list of the most prevalent constructions involving the hyphen 
+and apostrophe in French is needed to determine whether or not these symbols act as word 
+boundaries-for instance, compare l'école (in which case the apostrophe replaces an elided vowel 
+in the article la and serves to link it with the noun that follows) with aujourd'hui (a single word with 
+a compound origin), and passe-montagne (a compound noun) with pensez-vous (an interrogative 
+inversion of pronoun and verb).</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>L'étape suivante, la génération d'hypothèses, consiste à produire, pour chaque mot identifié lors de 
+la segmentation, la liste de toutes les possibilités d'accentuation.</FONT>
+<FONT COLOR=white> Par exemple, si on a isolé l'unité 
+cote, on veut générer les formes cote, coté, côte, côté.</FONT>
+<FONT COLOR=black> En fait, rien n'empêche qu'on génère aussi 
+les formes côtè, cötê, etc.</FONT>
+<FONT COLOR=red> En pratique, toutefois, il importe de limiter autant que possible le nombre 
+d'hypothèses, de façon à réduire le potentiel d'explosions combinatoires.</FONT>
+<FONT COLOR=green> On a donc recours à une 
+liste de toutes les formes françaises valides, formes fléchies incluses, indexées sur leurs versions 
+désaccentuées.</FONT>
+<FONT COLOR=yellow> En théorie, une telle liste peut contenir plusieurs centaines de milliers de formes 
+distinctes.</FONT>
+<FONT COLOR=blue> En pratique, on peut couper ce nombre de moitié, en excluant les formes qui ne portent 
+pas d'accents et pour lesquelles il n'existe pas de variante accentuée valide.</FONT>
+<FONT COLOR=white> On peut réaliser des 
+économies supplémentaires en excluant les formes les moins fréquentes, mais dans ce cas, il faut 
+s'attendre à une baisse de la performance.</FONT>
+
+<TD><FONT COLOR=blue>
+<P>The next step, hypothesis generation, consists in producing a list of all accentuation possibilities for 
+each word identified in the segmentation process.</FONT>
+<FONT COLOR=white> For example, if the unit cote has been isolated, 
+the system would have to generate cote, coté, côte, and côté.</FONT>
+<FONT COLOR=black> Note that nothing precludes the 
+generation of nonexistent words such as côtè and cötê.</FONT>
+<FONT COLOR=red> In practice, though, it is important to limit 
+the number of hypotheses as much as possible so as to reduce the possibility of an undue number 
+of combinations.</FONT>
+<FONT COLOR=green> The system thus draws upon a list of all valid French forms, including inflections, 
+indexed according to their unaccented counterparts.</FONT>
+<FONT COLOR=yellow> In theory, such a list could contain several 
+hundreds of thousands of distinct word forms.</FONT>
+<FONT COLOR=blue> In practice, though, the number can be reduced by 
+half, by excluding the forms that take no accents and for which there are no valid accented variants.</FONT>
+<FONT COLOR=white> 
+The number can be further reduced by excluding the lower-frequency forms; however, this will 
+eventually result in a decline in performance.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=black>
+<P>Une fois les hypothèses générées, il faut choisir les plus vraisemblables :</FONT>
+<FONT COLOR=red> c'est ce qu'on appelle la 
+désambiguïsation.</FONT>
+<FONT COLOR=green> Nous utilisons pour ce faire un modèle de langue stochastique, appelé modèle 
+de Markov caché (l'implantation que nous utilisons est le package lm de Foster [4]).</FONT>
+<FONT COLOR=yellow> Dans ce 
+modèle, un texte est vu comme le résutat de deux processus stochastiques distincts.</FONT>
+<FONT COLOR=blue> Le premier 
+processus génère une suite de symboles qui, dans notre modèle, correspondent à des étiquettes 
+morpho-syntaxiques (par exemple : NomCommun-masculin-singulier, Verbe-Indicatif-présent-
+3ième-personne-pluriel).</FONT>
+<FONT COLOR=white> Dans un modèle markovien d'ordre N, la production d'un symbole dépend 
+uniquement des N-1 symboles précédents.</FONT>
+<FONT COLOR=black> La séquence d'étiquettes produite constitue le 
+phénomène caché d'où le modèle tire son nom.</FONT>
+<FONT COLOR=red> Le deuxième processus génère alors, pour chaque 
+étiquette de la séquence, un autre symbole qui, cette fois-ci, correspond à une forme (un mot) du 
+langage.</FONT>
+<FONT COLOR=green> Cette deuxième séquence est le résultat observable.</FONT>
+
+<TD><FONT COLOR=black>
+<P>Once all the hypotheses have been generated, the most probable ones must be selected.</FONT>
+<FONT COLOR=red> This step 
+is called disambiguation.</FONT>
+<FONT COLOR=green> A stochastic language model, called a hidden Markov model (HMM) is 
+used (by means of Foster's Im package [4]) to carry out the disambiguation process,</FONT>
+<FONT COLOR=yellow> According to 
+this model, a text is seen as the result of two distinct stochastic processes.</FONT>
+<FONT COLOR=blue> The first generates a 
+series of symbols which, in our model, correspond to morpho-syntactic tags (e.g., CommonNoun-
+masculine-singular; Verb-indicative-present-3rdPerson-plural).</FONT>
+<FONT COLOR=white> In an N-class HMM, the 
+production of a symbol depends exclusively on the preceding N-1 symbols.</FONT>
+<FONT COLOR=black> The sequence of tags 
+produced constitutes a hidden phenomenon (from which the name of the model is derived).</FONT>
+<FONT COLOR=red> Then 
+for each tag in the sequence, the second process generates another symbol-in this instance, one 
+that corresponds to a word that exists in the language.</FONT>
+<FONT COLOR=green> This second sequence is the observable 
+result.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=yellow>
+<P>Les paramètres de notre modèle sont donc :</FONT>
+
+<TD><FONT COLOR=yellow>
+<P>The parameters of our model are as follows:</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>·	P(ti | hi-1) :</FONT>
+<FONT COLOR=white> La probabilité d'observer une étiquette ti, étant données les N-1 étiquettes précé-
+dentes (hi-1 désigne la suite d'étiquettes de longueur N-1 se terminant à la position i-1).</FONT>
+
+<TD><FONT COLOR=blue>
+<P>·	P(ti | hi-1):</FONT>
+<FONT COLOR=white> The probability of observing tag ti, given the preceding N-1 tags (hi-1 designates the 
+series of N-1 tags ending at position i-1).</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=black>
+<P>·	P(fi | ti) :</FONT>
+<FONT COLOR=red> La probabilité d'observer une forme fi, étant donnée l'étiquette sous-jacente ti.</FONT>
+
+<TD><FONT COLOR=black>
+<P>·	P(fi | ti):</FONT>
+<FONT COLOR=red> The probability of observing form fi, given the underlying tag ti.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=green>
+<P>Bien entendu, la valeur exacte de ces paramètres est inconnue, mais en pratique, on peut en faire 
+l'estimation à partir de fréquences observées dans un corpus d'entraînement.</FONT>
+<FONT COLOR=yellow> Ce corpus consiste 
+en un ensemble de phrases, à chaque mot duquel est acollée l'étiquette appropriée (en d'autres 
+mots : un corpus dans lequel la nature du phénomène caché nous est "révélée").</FONT>
+<FONT COLOR=blue> La taille du corpus 
+doit être suffisante pour assurer une estimation fiable de la valeur de chaque paramètre.</FONT>
+<FONT COLOR=white> À défaut 
+d'un tel corpus étiquetté, on peut effectuer l'entraînement à partir d''un texte non-étiquetté, pour 
+ensuite raffiner la valeur des paramètres par réestimation.</FONT>
+<FONT COLOR=black> On peut aussi combiner ces deux 
+méthodes, c'est-à-dire obtenir une première estimation des paramètres à partir d'un petit corpus 
+étiquetté, pour ensuite en faire la réestimation sur la base d'un corpus non-étiquetté de plus grande 
+taille.</FONT>
+
+<TD><FONT COLOR=green>
+<P>The exact value of these parameters is, of course, unknown, but in practice, an estimate can be 
+made on the basis of frequencies observed in a training corpus.</FONT>
+<FONT COLOR=yellow> The corpus consists of a series of 
+sentences, each word of which is assigned an appropriate tag (i.e., a corpus within which the nature 
+of the "hidden" phenomenon is "revealed").</FONT>
+<FONT COLOR=blue> The corpus must be large enough to ensure a reliable 
+estimate of the value of each parameter.</FONT>
+<FONT COLOR=white> If no such tagged corpus is available, the training operation 
+can be carried out on an untagged text, and the parameters subsequently refined by reestimation.</FONT>
+<FONT COLOR=black> 
+Another option is to combine the two methods-i.e., to obtain an initial estimate of the parameters 
+on the basis of a small tagged corpus and then proceed with a reestimation on the basis of a larger, 
+untagged corpus.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=red>
+<P>Étant donnés ces paramètres, on peut évaluer la probabilité globale d'une suite de mots 
+s = s1s2...sn.</FONT>
+<FONT COLOR=green> Soit T, l'ensemble de toutes les séquences d'étiquettes de longueur n possibles :</FONT>
+<FONT COLOR=yellow>
+Bien que le calcul direct de cette équation requière un nombre d'opérations exponentiel en n, il 
+existe un algorithme qui produit le même résultat en temps polynomial (voir [5]).</FONT>
+
+<TD><FONT COLOR=red>
+<P>Given these parameters, the overall probability of a sequence of words s = s1s2...sn can be 
+evaluated.</FONT>
+<FONT COLOR=green> If T is the set of all possible n-length tagged sequences, then:</FONT>
+<FONT COLOR=yellow>
+Although the direct calculation of this equation requires a number of operations exponential in n, 
+there is an algorithm that will produce the same results in polynomial time (see [5]).</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>Notre stratégie de désambiguïsation consiste à choisir la suite d'hypothèses qui produit la version 
+du texte dont la probabilité globale est maximale.</FONT>
+<FONT COLOR=white> En d'autres mots, si on représente le texte et ses 
+hypothèses d'accentuation comme un graphe acyclique dirigé (DAG), le problème peut se formuler 
+comme la recherche du chemin, allant du début à la fin du texte, dont la probabilité est maximale 
+(figure 1).</FONT>
+
+<TD><FONT COLOR=blue>
+<P>Our disambiguation strategy consists in choosing a series of hypotheses that produce the version 
+of the text with the highest overall probability.</FONT>
+<FONT COLOR=white> In other words, if a given text segment and its 
+accentuation hypotheses are represented as a directed acyclic graph (DAG), the problem can be 
+expressed as the search, from the beginning to the end of the text segment, for the pathway with 
+the highest probability (figure 1).</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=black>
+<P>Figure 1:</FONT>
+<FONT COLOR=red> Représentation d'un texte et des hypothèses d'accentuation sous forme de 
+graphe acyclique dirigé</FONT>
+
+<TD><FONT COLOR=black>
+<P>Figure 1:</FONT>
+<FONT COLOR=red> Representation of a text segment and possible accentuation hypotheses in 
+the form of a directed acyclic graph</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=green>
+<P>Le calcul de ce chemin pose bien entendu des problèmes de complexité de calcul, puisque le 
+nombre de chemins à explorer croît en général de façon exponentielle avec la longueur du texte.</FONT>
+<FONT COLOR=yellow> 
+En pratique, toutefois, il est possible de segmenter le graphe en îlots indépendants, c'est-à-dire en 
+sections pour lesquelles le chemin optimal est indépendant du reste du graphe.</FONT>
+<FONT COLOR=blue> Typiquement, on 
+considère que les phrases sont indépendantes les unes des autres.</FONT>
+<FONT COLOR=white> On peut donc segmenter le 
+texte en phrases et calculer le chemin optimal pour chaque phrase.</FONT>
+<FONT COLOR=black> Si le nombre de possibilités à 
+l'intérieur d'une phrase demeure problématique, il existe des moyens de resegmenter celle-ci, au 
+prix d'une légère dégradation de la précision.</FONT>
+<FONT COLOR=red> Dans notre implantation, chaque phrase est 
+découpée en segments tels que le nombre de chemins à explorer à l'intérieur d'un segment 
+n'excède pas un certain seuil (que nous appelons le paramètre S).</FONT>
+<FONT COLOR=green> Les points de coupe sont choisis 
+au moyen d'une heuristique simple qui tend à minimiser la dépendance entre les segments :</FONT>
+<FONT COLOR=yellow> dans 
+la mesure du possible, chaque segment doit se terminer par une suite de mots non-ambigus, c'est-
+à-dire pour lesquels il n'existe à la fois qu'une seule hypothèse d'accentuation et une seule analyse 
+lexicale.</FONT>
+<FONT COLOR=blue> On traite alors successivement les segments de gauche à droite, et on préfixe chaque 
+segment avec les derniers mots du chemin optimal du segment précédent.</FONT>
+
+<TD><FONT COLOR=green>
+<P>There are, of course, computational complexity problems involved in the calculation of this pathway, 
+as the number of pathways to be explored generally increases exponentially with the length of the 
+text segment.</FONT>
+<FONT COLOR=yellow> In practice, however, it is possible to segment the graph into independent islets-i.e., 
+into sections for which the optimal pathway is independent from the rest of the graph.</FONT>
+<FONT COLOR=blue> Typically, 
+sentences are considered to be independent of one another.</FONT>
+<FONT COLOR=white> The text can thus be segmented into 
+sentences and the optimal pathway for each can be calculated.</FONT>
+<FONT COLOR=black>  If the number of possibilities within 
+a given sentence remains problematic, there are ways of resegmenting the sentence, at the 
+expense of a slight loss in accuracy.</FONT>
+<FONT COLOR=red> In our way of proceeding, each sentence is segmented such 
+that the number of pathways to be explored within a given segment does not exceed a certain 
+threshold (referred to as parameter S).</FONT>
+<FONT COLOR=green> The segmentation points are chosen by means of a simple 
+heuristic that tends to minimize segment interdependence.</FONT>
+<FONT COLOR=yellow> As much as possible, each segment 
+must end with a series of non-ambiguous words-i.e., words for which there is only one 
+accentuation hypothesis and one lexical analysis.</FONT>
+<FONT COLOR=blue> The segments are processed successively from 
+left to right, and each is prefixed with the last words of the optimal pathway of the preceding 
+segment.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=white>
+<P>Une fois la désambiguïsation effectuée, il reste à produire un résultat.</FONT>
+<FONT COLOR=black> Cette opération est en réalité 
+très simple, mais quand même digne d'intérêt.</FONT>
+<FONT COLOR=red> En effet, un de nos principaux soucis est de 
+préserver dans la sortie l'apparence du texte d'entrée.</FONT>
+<FONT COLOR=green> Il faut donc partir de chaque forme 
+apparaissant sur le chemin optimal du graphe, retrouver la forme correspondante dans la chaîne 
+d'entrée, et transposer l'accentuation de la nouvelle forme sur la forme originale, sans autrement 
+en modifier l'apparence.</FONT>
+
+<TD><FONT COLOR=white>
+<P>Once the disambiguation process has been completed, the results must be produced.</FONT>
+<FONT COLOR=black> Though this 
+operation does merit attention, it is actually very simple.</FONT>
+<FONT COLOR=red> One of our primary concerns is to preserve 
+the appearance of the input text once it reaches the output stage.</FONT>
+<FONT COLOR=green> Therefore, we must start with 
+each word form that appears on the optimal pathway represented on the graph, find the 
+corresponding ocurrence in the input string, and transpose the accentuation of the new form onto 
+the original form without modifying its appearance in any other way.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=yellow>
+<P>3</FONT>
+<FONT COLOR=blue>	Évaluation</FONT>
+
+<TD><FONT COLOR=yellow>
+<P>3</FONT>
+<FONT COLOR=blue>	Assessment</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=white>
+<P>Pour évaluer la performance d'une méthode de réaccentuation, il suffit de choisir un texte ou un 
+ensemble de textes français correctement accentués, de les désaccentuer automatiquement, de 
+soumettre le tout au programme de réaccentuation, et de comparer les résultats obtenus au texte 
+original.</FONT>
+
+<TD><FONT COLOR=white>
+<P>In order to assess the performance of an accent-restoration method, one simply has to select a 
+French text or set of texts that are correctly accented, automatically strip them of accents, feed them 
+into the accent-restoration program, and then compare the results with the original text.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=black>
+<P>Une des propriétés de Reacc que nous souhaitions évaluer était sa capacité à fonctionner avec des 
+textes de nature variée.</FONT>
+<FONT COLOR=red> Pour ce faire, l'idéal aurait été de soumettre à notre programme un corpus 
+"balancé", du même genre que le Brown Corpus.</FONT>
+<FONT COLOR=green> Comme nous ne disposions pas d'une telle 
+ressource pour le français, nous avons dû confectionner notre propre corpus, à partir de documents 
+qui nous étaient disponibles.</FONT>
+
+<TD><FONT COLOR=black>
+<P>One of the properties of Reacc that we wanted to evaluate was its ability to operate on various types 
+of texts.</FONT>
+<FONT COLOR=red> In order to do so, the ideal would have been to run the program on a "balanced" corpus, 
+along the lines of the Brown corpus.</FONT>
+<FONT COLOR=green> However, since no such resource was available in French, we 
+had to construct our own corpus from the documents at our disposal.</FONT>
+
+</TABLE>
+<P></P>
+<P ALIGN=CENTER><TABLE BORDER=0 CELLSPACING=15>
+<TR VALIGN=TOP><TD><FONT COLOR=yellow>
+<P>Le corpus de test est donc constitué d'extraits de textes français accentués, provenant de sept 
+sources différentes, représentées à peu près également :</FONT>
+<FONT COLOR=blue> on y retrouve des textes du domaine 
+militaire, des textes juridiques, des publications des Nations Unies, des textes littéraires, des 
+revues de presse, des manuels informatiques et des extraits du Hansard canadien (journal des 
+débats à la Chambre de Communes).</FONT>
+<FONT COLOR=white> L'ensemble totalise 57 966 mots (ce compte a été produit au 
+moyen de l'utilitaire UNIX wc).</FONT>
+<FONT COLOR=black> Certaines modifications ont été apportées au texte, afin de corriger 
+les quelques erreurs d'accentuation que nous avons pu déceler au fil des expériences.</FONT>
+
+<TD><FONT COLOR=yellow>
+<P>The training corpus was therefore composed of excerpts from accented French texts drawn from 
+seven different sources, represented in more or less equal proportions.</FONT>
+<FONT COLOR=blue> The texts include military 
+documents, legal texts, United Nations publications, literary texts, press reviews, computer 
+manuals, and excerpts from Hansard (the official record of proceedings in Canada's House of 
+Commons).</FONT>
+<FONT COLOR=white> The corpus totals 57,966 words (a figure produced by the UNIX wc utility).</FONT>
+<FONT COLOR=black> Certain 
+adjustments were made to the texts in order to correct a few errors in accentuation that were found 
+during testing.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=red>
+<P>Le générateur d'hypothèses de Reacc utilisait, pour nos tests, une liste de formes extraite du DMF, 
+un dictionnaire morpho-syntaxique contenant près de 380 000 formes distinctes ([1]).</FONT>
+<FONT COLOR=green> En fait, ce 
+nombre est probablement excessif.</FONT>
+<FONT COLOR=yellow> Nous avons d'ailleurs obtenu des résultats tout-à-fait 
+satisfaisants lors d'expériences préliminaires, avec un dictionnaire ne reconnaissant que 50 000 
+formes environ.</FONT>
+
+<TD><FONT COLOR=red>
+<P>For the purposes of our tests, the Reacc hypothesis generator used a list of word forms taken from 
+the Dictionnaire micro-informatisé du français (DMF), a morpho-syntactic dictionary that contains 
+nearly 380,000 distinct word forms [1].</FONT>
+<FONT COLOR=green> Such a large number of terms is probably unnecessary.</FONT>
+<FONT COLOR=yellow> In 
+fact, as fully satisfactory results were obtained during preliminary trials using a dictionary that 
+recognized some 50,000 word forms only.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>Pour le modèle de langue, après différentes expériences, nous avons opté pour une approche qui 
+privilégie la qualité des données sur leur quantité.</FONT>
+<FONT COLOR=white> Nous avons utilisé un modèle de Markov caché 
+d'ordre 2, basé sur un ensemble d'environ 350 étiquettes morpho-syntaxiques.</FONT>
+<FONT COLOR=black> Les paramètres du 
+modèle ont d'abord été initialisés à l'aide du DMF, c'est-à-dire qu'on a restreint d'emblée les P(fi | ti) 
+en fonction du contenu des valeurs sanctionnées par le dictionnaire.</FONT>
+<FONT COLOR=red> On a ensuite procédé à un 
+entraînement du modèle sur un corpus de texte de 60 000 mots, extrait du Hansard canadien, 
+étiqueté à la main ([2]).</FONT>
+<FONT COLOR=green> On a finalement utilisé un corpus de texte beaucoup plus volumineux (plus 
+de 3 millions de mots), non-étiqueté, afin de réestimer les paramètres du modèle.</FONT>
+
+<TD><FONT COLOR=blue>
+<P>Where the language model was concerned, after various trials, we opted for an approach that 
+placed a greater priority on the quality rather than the quantity of data.</FONT>
+<FONT COLOR=white> We used a bi-class HMM 
+based on a set of approximately 350 morpho-syntactic tags.</FONT>
+<FONT COLOR=black> The parameters of the model were first 
+initialized by means of the DMF-in other words, the P(fi | ti) were restricted according to the 
+contents of the values sanctioned by the dictionary.</FONT>
+<FONT COLOR=red> We then went on to an initial training phase, 
+using a 60,000-word manually tagged corpus taken from the Canadian Hansard [2].</FONT>
+<FONT COLOR=green> Lastly, a much 
+larger untagged corpus was used, consisting of over 3 million words, in order to reestimate the 
+model's parameters.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=yellow>
+<P>Outre le générateur d'hypothèses et le modèle de langue utilisés, plusieurs paramètres affectent la 
+performance de Reacc, tant sur le plan de la qualité des résultats obtenus que sur celui du temps-
+machine.</FONT>
+<FONT COLOR=blue> Néanmoins, le facteur le plus important est le paramètre S, qui limite la taille des 
+segments sur lesquels Reacc travaille.</FONT>
+<FONT COLOR=white> On retrouve dans la tableau 1 les résultats obtenus pour 
+différentes valeurs de S (une augmentation exponentielle de ce facteur se traduit en général par 
+une augmentation linéaire de la longueur des segments traités).</FONT>
+<FONT COLOR=black> Les tests ont été effectués sur une 
+machine Sun SPARCstation 10.</FONT>
+
+<TD><FONT COLOR=yellow>
+<P>Aside from the hypothesis generator and the language model used, a number of other parameters 
+affect Reacc's performance on the level of both the quality of the results obtained and running time.</FONT>
+<FONT COLOR=blue> 
+Nevertheless, the most important factor is the S parameter, which limits the size of the segments 
+that Reacc processes.</FONT>
+<FONT COLOR=white> Table 1 provides the results obtained for different S values (an exponential 
+increase in this factor generally translates into a linear increase in the length of the segments 
+processed).</FONT>
+<FONT COLOR=black> The tests were carried out on a Sun SPARCstation 10.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=red>
+<P>Nombre maximum 
+    d'hypothèses par 
+    segment (S)</FONT>
+
+<TD><FONT COLOR=red>
+<P>Maximum no. of 
+    hypotheses per 
+    segment (S)</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=green>
+<P>Temps-machine 
+    (secondes)</FONT>
+
+<TD><FONT COLOR=green>
+<P>Running time 
+    (seconds)</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=yellow>
+<P>Nombre total 
+    d'erreurs
+    (mots)</FONT>
+
+<TD><FONT COLOR=yellow>
+<P>Total number of 
+    errors (words)</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>Distance moyenne 
+    entre les erreurs 
+    (mots)</FONT>
+
+<TD><FONT COLOR=blue>
+<P>Average distance 
+    between errors 
+    (words)</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=white>
+<P>Tableau 1:</FONT>
+<FONT COLOR=black> Résultats des réaccentuations</FONT>
+
+<TD><FONT COLOR=white>
+<P>Table 1:</FONT>
+<FONT COLOR=black> Results of Accent-Restoration Trials</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=red>
+<P>Un examen sommaire des résultats obtenus révèle qu'on a fort à gagner en permettant au système 
+de travailler sur des segments plus longs.</FONT>
+<FONT COLOR=green> Toutefois, passée une certaine limite, la qualité des 
+résultats tend à plafonner, alors que les temps d'exécution, eux, grimpent en flèche.</FONT>
+<FONT COLOR=yellow> Tout 
+dépendant du genre d'application et des ressources disponibles, il semblerait qu'on puisse compter 
+sur des résultats acceptables dès lors que S est fixé à l'entour de 16 ou 32.</FONT>
+
+<TD><FONT COLOR=red>
+<P>A cursory look at the results reveals that there is much to be gained by allowing the system to work 
+on longer segments.</FONT>
+<FONT COLOR=green> However, beyond a certain limit, the quality of the results tends to level off, 
+while the running time increases radically.</FONT>
+<FONT COLOR=yellow> Depending on the type of application and the resources 
+available, it would seem that acceptable results can be obtained when S is set at around 16 or 32.</FONT>
+
+</TABLE>
+<P></P>
+<P ALIGN=CENTER><TABLE BORDER=0 CELLSPACING=15>
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>Il est intéressant d'examiner où Reacc se trompe.</FONT>
+<FONT COLOR=white> On retrouve dans le tableau 2 une classification 
+grossière des erreurs de réaccentuation que Reacc a commises sur notre corpus de test, lorsque 
+S était fixé à 16.</FONT>
+<FONT COLOR=black> La catégorie qui arrive en tête regroupe assez libéralement les erreurs qui ont pour 
+point en commun qu'elles résultent d'un mauvais choix sur la présence d'un accent aigu sur le e de 
+la syllabe finale (par exemple : aime versus aimé).</FONT>
+<FONT COLOR=red> Viennent ensuite les erreurs qui découlent de 
+"lacunes" du générateur d'hypothèses, c'est-à-dire de cas où celui-ci ne connaît tout simplement 
+pas la forme correctement accentuée.</FONT>
+<FONT COLOR=green> Dans la majorité des cas, il s'agit de noms propres (près de 
+la moitié, en fait), mais on rencontre aussi, surtout dans les textes de nature plus technique, 
+beaucoup d'abréviations, de mots non-français et de "néologismes" (par exemple : 
+réaménagement, séropositivité).</FONT>
+<FONT COLOR=yellow> La catégorie qui vient ensuite concerne une unique paire de 
+mots : la préposition à et la forme a du verbe avoir.</FONT>
+
+<TD><FONT COLOR=blue>
+<P>It is interesting to look at where Reacc goes wrong.</FONT>
+<FONT COLOR=white> Table 2 provides a rough classification of 
+accent-restoration errors made by Reacc on our training corpus when S was set at 16.</FONT>
+<FONT COLOR=black> The category 
+in which the greatest number of accentuation errors were made includes a rather liberal grouping 
+of errors that have a common feature: they are the result of an incorrect choice pertaining to an 
+acute accent on an e in the final syllable of a word (e.g., aime as opposed to aimé).</FONT>
+<FONT COLOR=red> The next group 
+of errors are those that stem from inadequacies in the hypothesis generator-i.e., cases in which 
+the generator simply does not know the correct accented form.</FONT>
+<FONT COLOR=green> In most cases (nearly half), proper 
+nouns are involved, but, especially in more technical texts, there are also many abbreviations, non-
+French words, and neologisms (e.g., réaménagement, séropositivité).</FONT>
+<FONT COLOR=yellow> The next category concerns 
+a unique word pair: the preposition à, and a, the third person singular form of the verb avoir.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>Type d'erreur</FONT>
+
+<TD><FONT COLOR=blue>
+<P>Type of error</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=white>
+<P>Nombre</FONT>
+
+<TD><FONT COLOR=white>
+<P>Number</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=black>
+<P>Pourcentage</FONT>
+
+<TD><FONT COLOR=black>
+<P>Percentage</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=red>
+<P>Ambiguïtés -e / -é</FONT>
+
+<TD><FONT COLOR=red>
+<P>Ambiguities: -e vs. -é</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=green>
+<P>Formes inconnues</FONT>
+
+<TD><FONT COLOR=green>
+<P>Unknown word forms</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=yellow>
+<P>Ambiguïté a / à</FONT>
+
+<TD><FONT COLOR=yellow>
+<P>Ambiguity: a vs. à</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>Autres</FONT>
+
+<TD><FONT COLOR=blue>
+<P>Other</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=white>
+<P>Total</FONT>
+
+<TD><FONT COLOR=white>
+<P>Total</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=black>
+<P>Tableau 2:</FONT>
+<FONT COLOR=red> Classification des erreurs d'accentuation
+    (S = 16)</FONT>
+
+<TD><FONT COLOR=black>
+<P>Table 2:</FONT>
+<FONT COLOR=red> Classification of Accent Restoration Errors
+    (S = 16)</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=green>
+<P>4</FONT>
+<FONT COLOR=yellow>	Conclusions</FONT>
+
+<TD><FONT COLOR=green>
+<P>4</FONT>
+<FONT COLOR=yellow>	Conclusions</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=blue>
+<P>Nous avons présenté une méthode de réaccentuation automatique des textes français, basée sur 
+un modèle de langue markovien caché.</FONT>
+<FONT COLOR=white> Cette méthode a fait l'objet d'une implantation réelle : le 
+programme Reacc.</FONT>
+<FONT COLOR=black> Nos expériences ont démontré que ce programme produisait des textes d'une 
+qualité tout-à-fait acceptable, dans des temps plus que raisonnables :</FONT>
+<FONT COLOR=red> on peut atteindre une 
+moyenne d'une erreur d'accentuation aux 130 mots, en traitant plus de 20 000 mots à la minute.</FONT>
+
+<TD><FONT COLOR=blue>
+<P>This report has presented a method of automatic accent restoration for French texts, based on a 
+hidden Markov language model.</FONT>
+<FONT COLOR=white> This method was actually implemented by means of the Reacc 
+software.</FONT>
+<FONT COLOR=black> Our experiments have demonstrated that this program produces texts that are altogether 
+acceptable within a totally reasonable time frame:</FONT>
+<FONT COLOR=red> we can expect an error to occur every 130 words 
+on average, and the processing of 20,000 words per minute.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=green>
+<P>Bien entendu, il y a toujours place à des améliorations.</FONT>
+<FONT COLOR=yellow> En particulier, il est certain que l'utilisation 
+d'un modèle de langue plus fin (par exemple, un modèle d'ordre 3) ne pourrait qu'améliorer la 
+qualité de la désambiguïsation.</FONT>
+<FONT COLOR=blue> Compte tenu aussi de la forte proportion d'erreurs d'accentuation 
+causées par des lacunes au dictionnaire, il serait intéressant d'examiner des façons de traiter ces 
+"mots inconnus".</FONT>
+<FONT COLOR=white> À cet égard, nous avons déjà effectué certaines expériences préliminaires, qui ont 
+produit des résultats particulièrement intéressant.</FONT>
+<FONT COLOR=black> En particulier, nous nous sommes intéressés à 
+des façons de "deviner" l'accentuation d'un mot inconnu, à partir d'une modélisation stochastique 
+de l'accentuation des mots connus.</FONT>
+<FONT COLOR=red> Il reste toutefois beaucoup de travail à faire de ce côté.</FONT>
+
+<TD><FONT COLOR=green>
+<P>There is, of course, always room for improvement.</FONT>
+<FONT COLOR=yellow> In particular, the use of a more refined language 
+model (e.g., a tri-class HMM) could only enhance the quality of the disambiguation process.</FONT>
+<FONT COLOR=blue> 
+Moreover, given the large proportion of accentuation errors caused by words not recognized by the 
+dictionary, it would be interesting to examine means of dealing with such "unknown" words.</FONT>
+<FONT COLOR=white> In this 
+regard, we have already carried out certain preliminary experiments which have produced 
+especially interesting results.</FONT>
+<FONT COLOR=black> In particular, we have focused on ways of "guessing" the accentuation 
+of an unknown word on the basis of a stochastic model of the accentuation of known words.</FONT>
+<FONT COLOR=red> There 
+is nevertheless a great deal of work to be done in this area.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=green>
+<P>Par ailleurs, les méthodes que nous avons exposées ouvrent la porte à d'autres applications du 
+même genre.</FONT>
+<FONT COLOR=yellow> Par exemple, on peut voir comment les méthodes de réaccentuation pourraient être 
+généralisées, afin de traiter d'autres types de pertes d'information. On pense tout particulièrement 
+aux textes dont tous les caractères accentués ont été remplacés par un caractère unique 
+(typiquement, un point d'interrogation), ou aux textes dont le huitième bit de chaque caractère a été 
+perdu.</FONT>
+<FONT COLOR=blue> Dans de tels textes le é apparaît comme un i, le è comme un h, etc.</FONT>
+<FONT COLOR=white> Dans ces cas, au 
+problème de l'ambiguïté lexicale s'ajoute celui du découpage, qui devient lui aussi ambigu.</FONT>
+
+<TD><FONT COLOR=green>
+<P>The methods we described here open the door to other, similar applications.</FONT>
+<FONT COLOR=yellow> For example, we can 
+see how generalizations could be drawn from accent-restoration methods in order to deal with other 
+types of information loss-especially texts in which all accented characters have been replaced by 
+a single character (most often a question mark), or texts in which the eighth bit of each character 
+has been lost.</FONT>
+<FONT COLOR=blue> For instance, in such texts, é comes out as an i and è as an h.</FONT>
+<FONT COLOR=white> In such cases, a 
+problem of determining word boundaries compounds that of lexical ambiguity; word boundaries 
+thus become a source of ambiguity as well.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=black>
+<P>Une autre possibilité intéressante est de greffer un programme du genre de Reacc à un logiciel de 
+traitement de texte, d'une manière telle que l'utilisateur puisse taper un texte français sans se 
+soucier des accents, qui sont alors insérés automatiquement à mesure que le texte est produit.</FONT>
+<FONT COLOR=red> De 
+la réaccentuation, on passe ainisi à l'accentuation automatique.</FONT>
+<FONT COLOR=green> Un tel mécanisme pourrait faciliter 
+sensiblement la saisie des textes français. (On sait combien les conventions de saisie des accents 
+au clavier sont variées et pas toujours très ergonomiques.)</FONT>
+
+<TD><FONT COLOR=black>
+<P>Another interesting possibility is that of grafting a program such as Reacc onto a word processing 
+application so that the user can input a French text without worrying about accents, which would be 
+inserted automatically as the text is being input.</FONT>
+<FONT COLOR=red> This would thus mark a shift from accent restoration 
+to automatic accentuation.</FONT>
+<FONT COLOR=green> This type of feature could significantly facilitate the inputting of French 
+texts, especially in light of the lack of uniformity and ergonomic soundness in the conventions for 
+producing accents on computer keyboards.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=yellow>
+<P>Une application beaucoup plus ambitieuse, se basant sur des méthodes similaires, est la rédaction 
+assistée par ordinateur.</FONT>
+<FONT COLOR=blue> Dans ce cas, plutôt que de travailler sur le texte déjà tapé par l'utilisateur, 
+l'ordinateur s'intéresse au texte à venir, et essaie de prévoir ce que l'utilisateur va taper, de façon 
+à lui éviter la saisie de grandes portions de texte.</FONT>
+
+<TD><FONT COLOR=yellow>
+<P>A much more ambitious application that could derive from similar methods is computer-assisted 
+writing.</FONT>
+<FONT COLOR=blue> Instead of processing a text already input by the user, the computer would be concerned 
+with text yet to be formulated and would try to foresee what the user will type so as to avoid the 
+need to manually input large portions of text.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=white>
+<P>Toutes ces applications font présentement l'objet de travaux de recherche au CITI.</FONT>
+
+<TD><FONT COLOR=white>
+<P>All of these applications are currently being studied at CITI.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=black>
+<P>Références</FONT>
+
+<TD><FONT COLOR=black>
+<P>References</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=red>
+<P>[1]</FONT>
+<FONT COLOR=green>	Bourbeau, Laurent et François Pinard, 1987, Dictionnaire Micro-informatisé du Français 
+(DMF), Progiciels Bourbeau Pinard Inc., 1501 avenue Ducharme, Montréal, H2V 1G2.</FONT>
+
+<TD><FONT COLOR=red>
+<P>[1]</FONT>
+<FONT COLOR=green>	Bourbeau, Laurent, and François Pinard. 1987. Dictionnaire micro-informatisé du français 
+(DMF). Montreal: Progiciels Bourbeau Pinard inc.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=yellow>
+<P>[2]</FONT>
+<FONT COLOR=blue>	Bourbeau, Laurent, 1994, Fabrication d'un corpus témoin bilingue étiqueté et annoté pour la 
+mise au point de techniques de parsage automatique probabiliste, Rapport technique 
+présenté par Progiciels Bourbeau Pinard, Centre d'innovation en technologies de l'information 
+(CITI), Laval.</FONT>
+
+<TD><FONT COLOR=yellow>
+<P>[2]</FONT>
+<FONT COLOR=blue>	Bourbeau, Laurent. 1994. Fabrication d'un corpus témoin bilingue étiqueté et annoté pour la 
+mise au point de techniques de parsage automatique probabiliste. Technical report submitted 
+by Progiciels Bourbeau Pinard to the Centre for Information Technology Innovation (CITI), 
+Laval.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=white>
+<P>[3]</FONT>
+<FONT COLOR=black>	El-Bèze, Marc, Bernard Mérialdo, Bénédicte Rozeron et Anne-Marie Derouault, 1994, 
+"Accentuation automatique de textes par des méthodes probabilistes", dans Technique et 
+sciences informatiques, Vol 13, no 6, pp. 797 - 815.</FONT>
+
+<TD><FONT COLOR=white>
+<P>[3]</FONT>
+<FONT COLOR=black>	El-Bèze, Marc, Bernard Mérialdo, Bénédicte Rozeron and Anne-Marie Derouault. 1994. 
+"Accentuation automatique de textes par des méthodes probabilistes." In Technique et 
+sciences informatiques, vol. 13, no. 6, pp. 797-815.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=red>
+<P>[4]</FONT>
+<FONT COLOR=green>	Foster, George F., 1995, Communication personnelle.</FONT>
+
+<TD><FONT COLOR=red>
+<P>[4]</FONT>
+<FONT COLOR=green>	Foster, George F. 1995. Personal communication.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=yellow>
+<P>[5]</FONT>
+<FONT COLOR=blue>	Rabiner, L. R. et B. H. Juang, janvier 1986, "An Introduction to Hidden Markov Models", dans 
+IEEE ASSP Magazine.</FONT>
+
+<TD><FONT COLOR=yellow>
+<P>[5]</FONT>
+<FONT COLOR=blue>	Rabiner, L. R., and B. H. Juang. 1986. "An Introduction to Hidden Markov Models." In IEEE 
+ASSP Magazine, January issue.</FONT>
+
+<TR VALIGN=TOP><TD><FONT COLOR=white>
+
+[6]</FONT>
+<FONT COLOR=black>	Yarowsky, David, 1994, "Decision Lists for Lexical Ambiguity Resolution: Application to Accent 
+Restoration in Spanish and French", dans Proceeding of the 32nd Annual Meeting of the 
+Association for Computational Linguistics (ACL-94), pp. 88-95.</FONT>
+<FONT COLOR=red>
+</FONT>
+
+<TD><FONT COLOR=white>
+
+[6]</FONT>
+<FONT COLOR=black>	Yarowsky, David. 1994. "Decision Lists for Lexical Ambiguity Resolution: Application to Accent 
+Restoration in Spanish and French." In Proceedings of the 32nd Annual Meeting of the 
+Association for Computational Linguistics (ACL-94), pp. 88-95.</FONT>
+<FONT COLOR=red>
+</FONT>
+
+</TABLE>
+</BODY>
+</HTML>

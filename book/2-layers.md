@@ -154,9 +154,49 @@ pl.yscale('log')
 ![fig1](figs/ch2/fig1.png)
 
 #### 2) 基于 autograd.Function 构建
-(Todo)
+本节我们通过拓展 `torch.autograd.Function` 模块来构建一个线性变换模块。构建时，我们要在该模块内定义两个函数：一个`forward` 和一个`backward`。前者输入$X$、$W$和$B$，然后输出一个 $Y$ 张量。其中 $Y=XM+B$ 。后者输入的是由上游损失函数传递下来，相对于 $Y$ 的梯度，输出的是三个输入变量的梯度。假定损失函数为 $L$ ，通过 backpropagate 传递到 $Y$ 的梯度为 $\frac{\partial L}{\partial Y}$，那么， 
+$$\frac{\partial L}{\partial X_{i,j}} = \sum_{k,l}\frac{\partial L}{\partial Y_{k,l}}\frac{\partial Y_{k,l}}{\partial X_{i,j}}$$ $$= \sum_{k,l}\frac{\partial L}{\partial Y_{k,l}}\frac{\partial (\sum_{m}X_{k,m}W_{m,l}+B_{k,l})}{\partial X_{i,j}}$$ $$=  \sum_{k,l}\frac{\partial L}{\partial Y_{k,l}}\sum_{m}W_{m,l} \delta_{k,i}\delta_{m,j}$$ $$= \sum_l \frac{\partial L}{\partial Y_{i,l}}W_{j,l}$$ $$= \frac{\partial L}{\partial Y}W^{T}$$ 类似地，我们可以得到 $$\frac{\partial L}{\partial W} = X^T \frac{\partial L}{\partial Y}$$ 以及
+$$\frac{\partial L}{\partial B} = \frac{\partial L}{\partial Y}$$ 。然而，需要注意的是 bias 项的话，对于不同的 batch（每一个 batch 对应一行） 有相同的值，因此，我们可以用所有行的平均（或者求和）值来代替之。因此，$ \frac{\partial L}{\partial B}:=\frac{\partial L}{\partial B_{,j}} = \sum_{i}\frac{\partial L}{\partial Y_{i,j}}$ 。如下是实现的代码：
+
+```python 
+from torch.autograd import Function
+from torch import nn
+import torch
+import numpy as np
+# Inherit from Function
+class LinearFunction(Function):
+    def __call__(self, x):
+        return self.apply(x)
+
+    # 注意：backward 和 forward 函数都是 @staticmethods
+    @staticmethod
+    # bias 是一个可选参数
+    def forward(ctx, input, weight, bias=None):
+        ctx.save_for_backward(input, weight, bias) # 保存变量，用于更新梯度
+        output = input.mm(weight.t())
+        if bias is not None:
+            output += bias.unsqueeze(0).expand_as(output) # 为每一个batch复制一份相同的bias
+        return output
+
+    # 这个函数只有一个输出：Y, 因此，只有一个从上游返回的梯度张量
+    @staticmethod
+    def backward(ctx, grad_output):
+    	# 读取之前存储变量值，并将其梯度全部初始为None
+        input, weight, bias = ctx.saved_tensors
+        grad_input = grad_weight = grad_bias = None
+
+        if ctx.needs_input_grad[0]: # 检查第一个参数是否需要更新梯度
+            grad_input = grad_output.mm(weight.t()) # dL/dX 参见前文推导
+        if ctx.needs_input_grad[1]:  
+            grad_weight = input.t().mm(grad_output.t()) # dL/dW
+        if bias is not None and ctx.needs_input_grad[2]:
+            grad_bias = grad_output.mean(0).squeeze(0) # dL/dB
+
+        return grad_input, grad_weight, grad_bias
+```
+
 #### 3) 基于 nn.Module 构建
-代码如下：
+以上代码提供了一个可以自动计算梯度的线性变换运算，将$X$ 变换为 $Y$。接下来，我们要把这个运算封装成一个神经网络层。其代码如下：
 
 ```python
 # 定义一个线性层
@@ -167,26 +207,25 @@ class Linear(nn.Module):
         self.output_features = output_features
 
         # nn.Parameter 
-        self.weight = nn.Parameter(torch.Tensor(output_features, input_features))
+        self.weight = nn.Parameter(torch.Tensor(input_features, output_features))
         if bias:
             self.bias = nn.Parameter(torch.Tensor(output_features))
         else:
-            # You should always register all possible parameters, but the
-            # optional ones can be None if you want.
+            # 注意：必须将所有的可训练参数注册，即便没有被使用。
+            # 对于可选参数，你可以将其注册为 None，但不能不注册
             self.register_parameter('bias', None)
 
-        # Not a very smart way to initialize weights
+        # 初始化参数值
         self.weight.data.uniform_(-0.1, 0.1)
         if bias is not None:
             self.bias.data.uniform_(-0.1, 0.1)
 
     def forward(self, input):
-        # See the autograd section for explanation of what happens here.
+        # 计算Y = XM+B
         return LinearFunction.apply(input, self.weight, self.bias)
-
+    
     def extra_repr(self):
-        # (Optional)Set the extra information about this module. You can test
-        # it by printing an object of this class.
+        # (可选) 设置关于这个模块的额外信息，可以通过 print 来查看
         return 'in_features={}, out_features={}, bias={}'.format(
             self.in_features, self.out_features, self.bias is not None
         )

@@ -1,0 +1,951 @@
+<!DOCTYPE CESANA PUBLIC "-//CES//DTD cesAna//EN" >
+<CESANA VERSION="1.12">
+<CHUNKLIST>
+<CHUNK>
+<PAR>
+<S ID="61">
+Peut-on vérifier automatiquement la cohérence terminologique?
+</S>
+<S ID="82">
+Elliott Macklovitch
+</S>
+<S ID="86">
+1.
+</S>
+<S ID="99">
+Introduction
+</S>
+<S ID="352">
+Il arrive souvent dans les services de traduction que l'on soit obligé de morceler les textes  volumineux, c'est-à-dire de les diviser et de les répartir entre plusieurs traducteurs, y compris des pigistes qui travaillent à l'extérieur du service.
+</S>
+<S ID="529">
+Dans une telle situation, il incombe généralement  au réviseur de fusionner les parties traduites par ces différentes personnes et de faire en sorte que le tout soit cohérent.
+</S>
+<S ID="660">
+Le réviseur doit notamment s'assurer de la cohérence ou de l'uniformité  terminologique, ce qui peut représenter une lourde tâche.
+</S>
+<S ID="743">
+Intuitivement, ce qu'on entend par  cohérence terminologique est assez clair ici :
+</S>
+<S ID="904">
+chaque unité terminologique doit être traduite de la  même façon partout dans le texte, dans le but, par exemple, de supprimer toute ambiguïté pour le lecteur.
+</S>
+<S ID="1115">
+La cohérence terminologique est généralement l'un des critères qui définissent une bonne  traduction et, bien sûr, la situation décrite ci-dessus n'est pas la seule dans laquelle on doit s'en préoccuper.
+</S>
+<S ID="1320">
+Au CITI, nous sommes en train de développer un outil d'aide à l'intention du réviseur  (qui peut être le traducteur lui-même) dont le but est justement de valider certaines propriétés d'un texte traduit.
+</S>
+<S ID="1536">
+Pour le moment, ce système, que l'on a baptisé TransCheck, est en mesure de déceler  certaines des erreurs de traduction les plus courantes, comme les faux amis, les calques, les emprunts et certaines impropriétés.
+</S>
+<S ID="1871">
+Il est important de noter que la plupart de ces erreurs sont  généralement hors de portée des outils de vérification monolingue comme les correcteurs d'orthographe ou de grammaire, précisément parce que les erreurs de traduction sont d'ordre bilingue et dépendent des relations qui existent entre deux textes de langues différentes.
+</S>
+<S ID="2016">
+Si  TransCheck est en mesure de les déceler, par contre, c'est parce qu'il a été conçu expressément pour traiter ce genre de textes parallèles.
+</S>
+<S ID="2333">
+Plus précisément, le système cherche à reconstituer le travail  du traducteur humain en effectuant ce qu'on appelle un alignement automatique des deux textes - une opération qui consiste à rétablir explicitement les liens entre les segments d'un texte en LD et les segments correspondants dans sa traduction en LA.
+</S>
+<S ID="2426">
+Pour une description détaillée du premier  prototype de TransCheck, voir (Macklovitch 1994);
+</S>
+<S ID="2513">
+mais voici en gros comment on envisage  l'emploi d'un tel vérificateur de traductions.
+</S>
+<S ID="2695">
+Avant que TransCheck puisse vérifier une propriété d'une traduction, le texte source et le  texte cible doivent être soumis au système pour que celui-ci en fasse l'alignement.
+</S>
+<S ID="2842">
+Nous n'allons  pas décrire ici les algorithmes dont se sert le programme pour calculer automatiquement les correspondances entre les deux textes.
+</S>
+<S ID="2981">
+Mentionnons seulement que lorsque la résolution des   alignements ne va pas au-delà de la phrase, le programme est d'une grande précision;
+</S>
+<S ID="3137">
+en outre, le  programme peut traiter les cas où une phrase dans une langue est traduite par deux ou même trois phrases dans l'autre langue, et vice-versa.
+</S>
+<S ID="3265">
+Suivant la terminologie utilisée par (Harris 1988), nous  appellerons le produit d'un tel programme d'alignement un «bi-texte».
+</S>
+<S ID="3529">
+Supposons maintenant qu'un  réviseur désire valider une ébauche de traduction avant de la livrer au client, pour s'assurer qu'elle soit exempte d'interférence de la langue source, car c'est là une autre qualité qu'on associe généralement à une bonne traduction.
+</S>
+<S ID="3747">
+Il pourrait faire appel à TransCheck pour l'aider dans cette  tâche, de la même façon qu'un rédacteur monolingue utilise un correcteur d'orthographe pour s'assurer que ses textes sont exempts de fautes d'orthographe.
+</S>
+<S ID="4025">
+Le premier prototype du système  TransCheck du CITI incorpore une base de données d'environ 2 800 paires de mots qui ne doivent pas être pris pour des équivalents, dont un grand nombre des exemples classiques de faux amis comme «library//librairie» et «deception//déception».
+</S>
+<S ID="4211">
+Ce que fait le système, concrètement, c'est  de prendre tour à tour les entrées de cette base de données et, pour chacune, d'examiner le bi-texte produit par le programme d'alignement.
+</S>
+<S ID="4433">
+Si, par exemple, il trouve un segment en langue source  contenant «library» qui est aligné avec un segment en langue cible contenant «librairie», il marque cette paire alignée pour la soumettre à l'attention du réviseur.
+</S>
+<S ID="4706">
+Au cours de la séance d'édition qui  suit, le réviseur examine tous les segments marqués et apporte toutes les corrections nécessaires au texte cible, y compris des corrections que le système propose lui-même d'après l'information de chaque entrée de la base de données.
+</S>
+<S ID="4797">
+(Une recopie d'écran d'une séance d'édition TransCheck est  présentée à la page suivante).
+</S>
+<S ID="4944">
+Voilà essentiellement comment fonctionne TransCheck pour repérer les cas d'interférence de  la langue source dans une ébauche de traduction.
+</S>
+<S ID="5212">
+Nous travaillons sur plusieurs extensions du  premier prototype de TransCheck qui, nous l'espérons, permettront au système de détecter automatiquement l'omission d'unités importantes du texte et de vérifier la transposition de divers types d'expressions numériques.
+</S>
+<S ID="5411">
+Une autre application importante que nous explorons  actuellement, c'est la possibilité d'utiliser TransCheck comme outil de vérification de la cohérence terminologique d'une ébauche de traduction.
+</S>
+<S ID="5510">
+Nous présentons, dans ce rapport, les résultats de ces  premières expériences sur la terminologie.
+</S>
+<S ID="5667">
+Encore ici, l'idée de base est très simple et, en fait, très voisine de l'approche utilisée pour  détecter les cas d'interférence de la langue source.
+</S>
+<S ID="5924">
+Supposons que nous prenions, comme point de  départ, la définition naïve de cohérence terminologique donnée plus haut, à savoir que chaque occurrence d'un terme désigné du texte source doit être traduite exactement par le même terme dans la langue cible.
+</S>
+<S ID="6079">
+Supposons aussi que le réviseur soit en mesure de dresser la liste des équivalences  à vérifier avant de commencer la révision de l'ébauche de traduction.
+</S>
+<S ID="6265">
+Il pourrait s'agir en fait d'un  glossaire propre au texte traduit, dont chaque entrée serait un énoncé d'équivalence terminologique simple - quelque chose comme «e-terme1 = f-terme1».
+</S>
+<S ID="6369">
+Comme précédemment, un bi-texte serait  produit à partir du texte source et de l'ébauche de traduction.
+</S>
+<S ID="6552">
+Ensuite, le système convertirait les  entrées du glossaire d'équivalences terminologiques du réviseur en une série de requêtes TransCheck qu'il appliquerait tour à tour au bi-texte.
+</S>
+<S ID="6764">
+Les segments alignés pour lesquels le système  trouverait le terme source du glossaire, MAIS NON le terme cible correspondant,  seraient, comme plus haut, marqués en vue d'être portés à l'attention du réviseur.
+</S>
+<S ID="7026">
+Nous avons décidé, pour tester cette idée, de réaliser une étude de faisabilité à petite échelle,  sans nous faire d'illusion sur ce schéma qui nous semblait nettement trop simpliste pour mener à 			 un système opérationnel de vérification terminologique.
+</S>
+<S ID="7076">
+Mais quelles seraient exactement ses  faiblesses?
+</S>
+<S ID="7153">
+Quels problèmes seraient soulevés et quelle serait leur importance relative?
+</S>
+<S ID="7290">
+Lesquels  de ces problèmes pourraient être résolus rapidement, et quels autres devraient attendre les résultats d'une longue recherche?
+</S>
+<S ID="7620">
+Pour nous aider à répondre à ces questions, cruciales si nous voulons  réellement mettre au point un vérificateur de cohérence terminologique opérationnel, nous avons décidé d'incorporer une version rudimentaire du schéma décrit ci-dessus au prototype actuel de TransCheck, et de l'appliquer à plusieurs traductions véritables.
+</S>
+<S ID="7624">
+2.
+</S>
+<S ID="7647">
+L'étude de faisabilité
+</S>
+<S ID="7652">
+2.1
+</S>
+<S ID="7666">
+Méthodologie
+</S>
+<S ID="7918">
+Pour notre étude de faisabilité, nous avons essayé d'obtenir un certain nombre de textes de  domaines variés, comportant chacun deux versions de la traduction en langue cible : une version préliminaire ou ébauche, et une version finale révisée.
+</S>
+<S ID="8032">
+(Rappelons que nous voulons, grâce à  TransCheck, signaler les erreurs possibles dans une ébauche de traduction.)
+</S>
+<S ID="8177">
+Cependant, il s'est  révélé plus difficile que prévu d'obtenir d'authentiques ébauches de traduction, peu importe la définition qu'on en donne.
+</S>
+<S ID="8515">
+Quand on leur demande des textes pour mener des expériences sur la  détection d'erreurs, les traducteurs et les services de traduction se montrent tout naturellement réticents à fournir des produits non finis, même si on les assure que ces textes serviront uniquement à la recherche et que les noms des personnes ne seront pas révélés.
+</S>
+<S ID="8668">
+Il nous a fallu, par conséquent,  faire certains compromis dans notre méthodologie, notamment en ce qui touche le premier texte que nous avons analysé.
+</S>
+<S ID="8901">
+Pour chacun des quatre textes sources que nous avons obtenus, nous avons choisi vingt-cinq  des termes les plus fréquents ou les plus évidents, avec l'aide d'un programme-maison d'extraction de termes candidats appelé F-TERM.
+</S>
+<S ID="8985">
+F-TERM se fonde sur les idées initialement proposées dans  (Justeson et Katz 1993).
+</S>
+<S ID="9214">
+Appliqué à un texte où la catégorie grammaticale de chaque mot a déjà  été assignée automatiquement, il extrait des séquences de mots qui correspondent à une définition syntaxique de terme complexe (ou terme à mots multiples) :
+</S>
+<S ID="9443">
+en anglais, il s'agit essentiellement  d'un groupe nominal dépourvu de son déterminant et formé d'une chaîne de noms et/ou d'adjectifs se terminant par un nom, laquelle chaîne peut être suivie ou non d'un groupe prépositionnel.
+</S>
+<S ID="9590">
+Encore  une fois, précisons que le programme produit une liste de termes candidats, qui sont triés selon leur nombre d'occurrences dans le texte.
+</S>
+<S ID="9697">
+En fait, la plupart de ces termes, à tout le moins au sommet  de la liste, se révèlent des termes valides.
+</S>
+<S ID="9772">
+En revanche, on ne retrouve pas dans la liste tous les  termes d'un texte.
+</S>
+<S ID="10027">
+D'une part, F-TERM ne relève pas les termes à mot unique, et d'autre part, les  imperfections de l'étiquetage automatique peuvent entraîner l'inclusion de séquences qui ne sont pas des groupes nominaux bien formés et l'omission de séquences qui en sont.
+</S>
+<S ID="10231">
+De surcroît, F- TERM n'a aucun critère pour distinguer un groupe  nominal non lexical (ou descriptif) d'un terme en bonne et due forme, si ce n'est la répétition littérale de l'expression dans le texte.
+</S>
+<S ID="10368">
+Nous avons repéré la traduction de chaque terme source de la liste dans la version finale du  texte correspondant en langue cible.
+</S>
+<S ID="10667">
+Lorsque le texte en langue cible contenait des équivalents  différents du même terme source, nous avons choisi le terme cible le plus fréquent, en faisant appel de temps à autre à TERMIUM, la banque de données linguistiques bien connue du gouvernement du Canada, pour nous aider dans notre choix.
+</S>
+<S ID="10945">
+Ces traductions reflètent une partie des décisions du  réviseur quant à la terminologie qui convenait au texte, et nous les avons formalisées sous forme d'énoncés d'équivalences terminologiques simples, puis converties en requêtes TransCheck, de la manière décrite ci-dessus.
+</S>
+<S ID="11222">
+TransCheck a alors pu parcourir le bi-texte produit à partir de chaque  texte source et de son ébauche de traduction, et signaler tous les cas dans lesquels un terme source n'a pas été rendu exactement par le terme cible indiqué, ou une variante flexionnelle du terme cible.
+</S>
+<S ID="11483">
+Enfin, par une analyse des résultats du système, c'est-à-dire en comparant les incohérences  signalées par TransCheck et la terminologie de la version finale, nous espérions nous faire une meilleure idée des principales difficultés de cette façon de procéder.
+</S>
+<S ID="11488">
+2.2
+</S>
+<S ID="11500">
+Les textes
+</S>
+<S ID="11913">
+Compte tenu de la difficulté que nous avons eue à obtenir des ébauches de traduction, nous  avons décidé d'effectuer notre premier test de vérification de la cohérence terminologique sur un manuel des Forces armées de 80 000 mots portant sur la formation et le déploiement des tireurs d'élite, pour lequel nous avions l'original anglais et une version française finale, mais pas d'ébauche de traduction.
+</S>
+<S ID="12098">
+Puisque le texte avait été publié dans les deux langues officielles, nous pouvions  supposer que la cohérence de la terminologie de la version française finale avait déjà été vérifiée.
+</S>
+<S ID="12167">
+Ces lacunes pouvaient sembler à première vue des obstacles majeurs;
+</S>
+<S ID="12410">
+toutefois, à ce stade, nous  étions plus intéressés à relever les types de bruit que TransCheck générerait dans sa vérification de la cohérence terminologique qu'à découvrir toute erreur isolée que le réviseur de ce texte aurait pu oublier.
+</S>
+<S ID="12581">
+La liste des vingt-cinq termes que nous avons choisis pour le texte «Tireurs d'élite» forme la  première colonne du tableau 1, qui se trouve à la fin de ce rapport.
+</S>
+<S ID="12711">
+La troisième colonne du tableau  donne le terme cible (TC) qui correspond à chaque terme source dans la version française finale.
+</S>
+<S ID="12913">
+La deuxième colonne indique le nombre total d'occurrences de chaque terme source (TS), et la  quatrième colonne, le nombre de fois que ce terme source n'est PAS traduit exactement par le terme cible.
+</S>
+<S ID="13125">
+Si nous prenons la première entrée du tableau, par exemple, nous voyons que «sniper»  apparaît au total 1 277 fois dans le texte, et que de ce nombre, 105 occurrences ne sont pas traduites par «tireur d'élite».
+</S>
+<S ID="13214">
+Les cinq autres colonnes du tableau 1 présentent une ventilation des cas où TS  =//= TC.
+</S>
+<S ID="13373">
+«Tête seulement» désigne les occurrences où un terme cible complexe est tronqué, c'est- à-dire que seulement la tête est utilisée plutôt que le terme complet;
+</S>
+<S ID="13411">
+voir des exemples en (1) ci- dessous.
+</S>
+<S ID="13609">
+La colonne suivante, «Pronom», comprend les cas où le texte français utilise un pronom  ou un autre type d'anaphore plutôt que le groupe nominal cible complet; voir des exemples en (2) ci-dessous.
+</S>
+<S ID="13935">
+La colonne intitulée «TS non  traduit» désigne les cas où le terme source n'est pas  réellement traduit dans le texte cible : ou bien il est entièrement omis, ou bien, dans certains cas, la traduction contient une périphrase au lieu d'un terme équivalent; voir des exemples de chacune de ces possibilités en (3) ci-dessous.
+</S>
+<S ID="14063">
+La colonne «Autre TC» désigne les cas où le texte français  utilise un autre terme que celui indiqué dans la troisième colonne.
+</S>
+<S ID="14291">
+Quelques cas de ce genre, qui  sont peut-être de véritables incohérences terminologiques, ont été relevés dans le texte Tireurs d'élite, mais ils ne sont pas très nombreux, ce qui est normal puisqu'il s'agit d'un texte publié;
+</S>
+<S ID="14346">
+des  exemples possibles sont donnés en (4) ci-dessous.
+</S>
+<S ID="14452">
+La dernière colonne, «Autres» vise tous les cas  qui ne sont pas compris dans les catégories précédentes.
+</S>
+<S ID="14867">
+Cela comprend des cas de coordination et  d'autres constructions grammaticales qui ont pour effet de fragmenter le terme cible (voir des exemples en (5) ci-dessous), des cas de bruit du système attribuables aux problèmes d'étiquetage, et diverses coquilles, comme des fautes d'orthographe ou de dactylographie, qui sont détectées par TransCheck mais ne constituent pas vraiment des incohérences terminologiques.
+</S>
+<S ID="14874">
+(1a)
+</S>
+<S ID="14879" new>
+...
+</S>
+<S ID="14920">
+the sniper moves his head back and forth
+</S>
+<S ID="14935" new>
+=>       	 ...
+</S>
+<S ID="14985">
+le tireur déplace la tête vers l'avant ou vers...
+</S>
+<S ID="14995">
+(1b)
+</S>
+<S ID="15047">
+The Unertl telescopic sight is a fixed 10 power...
+</S>
+<S ID="15098">
+=>        	La lunette Unertl grossit 10 fois et...
+</S>
+<S ID="15108">
+(2a)
+</S>
+<S ID="15152">
+The sniper places his hand to his chest...
+</S>
+<S ID="15202">
+=>        	Il place la main contre sa poitrine...
+</S>
+<S ID="15212">
+(2b)
+</S>
+<S ID="15252">
+Snipers will infiltrate enemy areas...
+</S>
+<S ID="15315">
+=>        	Ces derniers infiltrent les secteurs de l'ennemi...
+</S>
+<S ID="15325">
+(3a)
+</S>
+<S ID="15353">
+IDENTIFYING SNIPER TARGETS
+</S>
+<S ID="15390" new>
+=>        	IDENTIFICATION DES CIBLES
+</S>
+<S ID="15400">
+(3b)
+</S>
+<S ID="15448">
+Adjustment for eye relief should be made by...
+</S>
+<S ID="15531">
+=>           	L'ajustement de la distance entre l'oeil et la lunette se fait en...
+</S>
+<S ID="15541">
+(4a)
+</S>
+<S ID="15593">
+The sniper can insert a pad on the ghillie suit...
+</S>
+<S ID="15680">
+=>           	Le tireur d'élite peut insérer un coussin dans sa tenue de camouflage...
+</S>
+<S ID="15690">
+(4b)
+</S>
+<S ID="15695" new>
+...
+</S>
+<S ID="15759">
+which is supported from underneath by the top of the trigger...
+</S>
+<S ID="15777" new>
+=>           	...
+</S>
+<S ID="15834">
+qui est supportée du dessous par la tête du percuteur...
+</S>
+<S ID="15840">
+(5a)
+</S>
+<S ID="15865">
+direct or indirect fire
+</S>
+<S ID="15892" new>
+=> tirs direct ou indirect
+</S>
+<S ID="15902">
+(5b)
+</S>
+<S ID="15934">
+Determining correct eye relief
+</S>
+<S ID="15989" new>
+=>          Déterminer le dégagement correct de l'oeil
+</S>
+<S ID="16096">
+Le deuxième texte examiné, que nous avons baptisé «Lait», porte sur les produits laitiers.
+</S>
+<S ID="16244">
+Il  s'agit d'une analyse économique du ministère de l'Agriculture sur la compétitivité de l'industrie canadienne du lait et des produits laitiers.
+</S>
+<S ID="16521">
+La traduction avait été confiée en sous-traitance à un  cabinet, mais avant d'être retourné au ministère client, le texte a fait l'objet d'une révision sommaire appelée assurance de la qualité, faite par une traductrice principale du Bureau de la traduction du gouvernement.
+</S>
+<S ID="16684">
+Bien que le cabinet n'ait pas précisé combien de traducteurs avaient participé à ce  travail, tout porte à croire qu'au moins deux personnes étaient intervenues :
+</S>
+<S ID="16880">
+il y avait un  changement de police de caractères au milieu du fichier livré par le cabinet, lequel coïncidait avec un changement de la terminologie du texte cible pour plusieurs termes sources.
+</S>
+<S ID="17057">
+L'une des   préoccupations du réviseur du gouvernement, par conséquent, était de s'assurer de la cohérence de la terminologie du début à la fin de la version française finale.
+</S>
+<S ID="17265">
+Le tableau 2, à la fin de cet article,  indique les vingt-cinq termes sources que nous avons choisis pour ce texte, leurs équivalents en langue cible et la ventilation de tous les cas de non-correspondance.
+</S>
+<S ID="17569">
+Le troisième texte, que nous appelons «PPCI», fait partie d'un guide du ministère des Affaires  extérieures décrivant les politiques et pratiques du ministère pour l'organisation de promotions commerciales dans le cadre du Programme de promotion du commerce international (PPCI) du gouvernement.
+</S>
+<S ID="17899">
+L'original anglais, comprenant environ 16 000 mots, se divise en deux parties  distinctes : une description bien structurée, en style administratif, du programme et de son application, puis une série d'annexes disparates regroupant des formulaires du gouvernement, des questionnaires à choix multiples, des contrats types, etc.
+</S>
+<S ID="18044">
+Dans ce cas, nous savions que les deux  parties avaient été attribuées à des traducteurs différents du Bureau de la traduction du gouvernement.
+</S>
+<S ID="18155">
+Les termes sources choisis pour ce texte, ainsi que leurs équivalents en langue  cible, figurent au tableau 3.
+</S>
+<S ID="18348">
+Le dernier texte analysé, que nous appelons «Grappes», ne comptait que 4 235 mots, mais  avait quand même été attribué à deux traducteurs en raison du délai très court dont on disposait.
+</S>
+<S ID="18597">
+Il  s'agissait d'un appel de propositions du ministère de l'Industrie, des Sciences et de la Technologie relatif à un type particulier d'étude économique devant être réalisé dans l'Ouest canadien et faisant appel au concept d'analyse des grappes.
+</S>
+<S ID="18790">
+Les parties de l'appel de propositions décrivant le travail  à accomplir (produits à livrer, dates, critères de sélection, etc.) sont destinées au grand public et ne sont pas très techniques;
+</S>
+<S ID="18972">
+en revanche, le texte présente de l'information de référence sur l'analyse  des grappes et porte donc indirectement sur un domaine relativement spécialisé des sciences économiques.
+</S>
+<S ID="19147">
+Le tableau 4 présente les termes sources que nous avons retenus dans le texte  Grappes, ainsi que leurs équivalents en langue cible et la ventilation des non-correspondances.
+</S>
+<S ID="19368">
+Avant de passer à l'analyse détaillée des résultats produits par TransCheck pour ces quatre  textes, il y a une importante question de définition que nous aimerions soulever concernant l'utilisation du mot «terme».
+</S>
+<S ID="19708">
+Au moment d'amorcer cette étude, nous avons supposé que les unités  qu'un réviseur voudrait vérifier dans une ébauche de traduction seraient les termes en bonne et due forme, au sens technique de l'expression, c'est-à-dire les éléments d'un vocabulaire spécialisé décrivant les concepts et relations fondamentaux d'un domaine spécialisé.
+</S>
+<S ID="19772">
+Cette hypothèse,  cependant, n'était pas tout à fait justifiée.
+</S>
+<S ID="20060">
+En effet, l'une des choses que nous avons découvertes  dans nos consultations avec le réviseur ayant effectué l'assurance de la qualité de trois de nos textes, c'est que la distinction terme/non-terme n'est pas critique dans le travail de vérification de la cohérence d'une traduction.
+</S>
+<S ID="20355">
+Certes, une grande partie des unités dont le réviseur avait tenu à  vérifier la cohérence dans ces ébauches de traduction étaient des termes (avec fiches TERMIUM), mais certaines ne l'étaient pas et, dans d'autres cas, il était difficile de déterminer si l'on avait affaire à un terme ou non.
+</S>
+<S ID="20512">
+En fait, la distinction entre termes spécialisés et mots du vocabulaire général  dans un texte donné n'est pas toujours évidente, même pour un terminologue.
+</S>
+<S ID="20767">
+Le lecteur devrait  garder  ce fait à l'esprit en examinant les listes de termes sources des tableaux 1 à 4, car certains de ces termes - les acronymes, par exemples, qui abondent dans le texte PPCI - peuvent, à première vue, ne pas sembler des termes.
+</S>
+<S ID="20926">
+Nous ne prétendons pas que les 100 unités que nous avons choisies  pour notre étude de faisabilité constituent effectivement des termes au sens propre du mot.
+</S>
+<S ID="21104">
+De  même que Martin Kay a défini la traduction comme étant ce que les traducteurs font, nous voulons que TransCheck soit un outil d'aide pour les réviseurs dans ce qu'ils font.
+</S>
+<S ID="21269">
+En ce qui touche la  vérification de la cohérence terminologique, le réviseur nous a signalé que l'objectif primordial était d'éviter la confusion chez le lecteur.
+</S>
+<S ID="21440">
+Que les unités devant être rendues uniformément pour  atteindre cet objectif soient des termes en bonne et due forme ou non, c'est une question plus ou moins accessoire.
+</S>
+<S ID="21634">
+En l'absence d'une solution de rechange commode, toutefois, nous continuerons  d'utiliser le mot «terme» dans cet article, mais en nous affranchissant, si possible, de sa définition technique.
+</S>
+<S ID="21643">
+3.
+</S>
+<S ID="21653">
+Résultats
+</S>
+<S ID="21771">
+Le tableau 5 à la page suivante présente une synthèse des résultats fournis séparément aux  tableaux 1 à 4.
+</S>
+<S ID="22000">
+Les chiffres de ce tableau sommaire correspondent aux totaux des colonnes des  tableaux 1 à 4, qui résultent de l'analyse des vingt-cinq paires de termes choisies dans chacun des textes (Tireurs d'élite, Lait, PPCI et Grappes).
+</S>
+<S ID="22322">
+Examinons, pour commencer, les chiffres de la troisième colonne du tableau 5, qui donnent  les taux globaux de non-correspondance pour chaque texte, c'est-à-dire la proportion des occurrences de termes sources non traduites exactement par les termes cibles  figurant dans les glossaires d'équivalences des textes.
+</S>
+<S ID="22462">
+Notons que le taux de non-correspondance du texte Tireurs  d'élite, à 8,5 %, est sensiblement moins élevé que ceux des trois autres textes.
+</S>
+<S ID="22670">
+Rappelons, toutefois,  que la version française du texte Tireurs d'élite soumise à TransCheck était une version publiée qui, peut-on supposer, avait été vérifiée sous l'angle de la cohérence terminologique;
+</S>
+<S ID="22788">
+dans le cas des  trois autres textes, en revanche, la version soumise à Transcheck était une traduction préliminaire.
+</S>
+<S ID="22885">
+Par conséquent, cette disparité des taux de non-correspondance n'est pas vraiment une anomalie;
+</S>
+<S ID="23012">
+en fait, si notre hypothèse sur la façon dont les textes ont été traduits est exacte, c'est un résultat qui  apparaît normal.
+</S>
+<S ID="23188">
+Notons, par ailleurs, que les taux de non-correspondance des trois autres textes  sont relativement voisins : 30 % pour les textes Lait et Grappes, et 24 % pour le texte PPCI.
+</S>
+<S ID="23353">
+Le tableau 5 révèle une autre différence importante entre les résultats obtenus pour le texte  Tireurs d'élite et ceux obtenus pour les trois autres traductions :
+</S>
+<S ID="23579">
+le nombre de cas où un terme cible  est remplacé par un pronom ou un autre type d'anaphore est beaucoup plus élevé dans le texte Tireurs d'élite (35 occurrences sous «Pronom» contre 11 au total pour les trois autres textes);
+</S>
+<S ID="23873">
+il en  est de même, bien qu'à un moindre degré, pour le nombre d'occurrences sous «Tête seulement», c'est-à-dire de cas où le terme cible est tronqué (29 % de non-correspondances dans Tireurs d'élite, comparativement à 19 %, 18 % et 0 % pour les textes Lait, PPCI et Grappes respectivement).
+</S>
+<S ID="23918">
+Pourquoi il en est ainsi n'est pas évident.
+</S>
+<S ID="24148">
+C'est peut-être que le terme «sniper» est si fréquent dans  le premier texte que le recours à ce genre d'anaphore évite la répétition encombrante de «tireur d'élite» et permet d'alléger et de diversifier le style du texte cible.
+</S>
+<S ID="24225">
+L'explication tient peut-être  encore plus à la réalité extra-linguistique :
+</S>
+<S ID="24459">
+il n'y a qu'un seul référent possible pour «sniper» dans  ce texte (le stagiaire type à qui s'adresse ce manuel), tandis que les entités auxquelles renvoient les termes tronqués dans les autres textes sont peut-être moins évidentes.
+</S>
+<S ID="24549">
+Tableau 5 : Synthèse des résultats pour les quatre textes:
+</S>
+<S ID="24834">
+Si nous passons maintenant aux autres catégories du tableau 5, nous remarquons que la  proportion de non-correspondances attribuables à l'emploi d'autres termes (Autre TC) est beaucoup plus élevée dans les textes PPCI et Grappes que dans les textes Tireurs d'élite et Lait.
+</S>
+<S ID="24949">
+Il se trouve  que les textes PPCI et Grappes sont les moins techniques des quatre textes que nous avons analysés;
+</S>
+<S ID="25034">
+c'est du moins l'impression distincte qui ressort d'un survol de ces textes sources.
+</S>
+<S ID="25154">
+En fait,  nous pouvons peut-être confirmer cette impression au moyen des données produites par notre programme F-TERM.
+</S>
+<S ID="25270">
+Rappelons que F-TERM repère les séquences de mots qui correspondent à  une définition syntaxique de terme complexe.
+</S>
+<S ID="25501">
+À l'instar de (Justeson et Katz 1993), nous  supposerons pour les fins de cet argument que la plupart des séquences complexes qui se répètent intégralement au moins deux fois dans un texte sont en fait des unités terminologiques.
+</S>
+<S ID="25647">
+Dans le  texte Grappes, par exemple, F-TERM détecte 377 termes candidats complexes, dont seulement 49 se répètent plus d'une fois dans le texte.
+</S>
+<S ID="25730">
+Le nombre total d'occurrences correspondant à ces  49 termes candidats est de 125;
+</S>
+<S ID="25944">
+si nous ajoutons les 43 occurrences du terme simple «cluster», qui,  comme le mot «sniper», est le terme le plus fréquent du texte, nous obtenons un total de 168 occurrences de termes dans un texte de 4 235 mots.
+</S>
+<S ID="26187">
+En divisant le nombre total de mots du texte  par le nombre d'occurrences de termes candidats, nous devrions obtenir un corrélat très approximatif de la densité terminologique : dans le cas du texte Grappes, on obtient 25,21 mots par terme.
+</S>
+<S ID="26363">
+En  comparaison, le même calcul appliqué au texte Lait, qui est peut-être le plus technique  des textes analysés, donne un ratio beaucoup moins élevé de mots par terme : 9,42.
+</S>
+<S ID="26491">
+Le ratio du texte  Tireurs d'élite est de 19,14, et celui du texte PPCI, qui est encore moins technique que Grappes, de 32,60.
+</S>
+<S ID="26725">
+Certes, comme nous le disions plus haut à la section 2, les résultats produits par F-TERM  ne sont pas entièrement fiables, mais la seule hypothèse à faire ici, c'est que F-TERM est constant dans ses faiblesses d'un texte à l'autre.
+</S>
+<S ID="26888">
+Ces chiffres sont alors sans signification en valeur absolue,  mais peuvent refléter la densité terminologique relative des quatre textes que nous avons analysés.
+</S>
+<S ID="27173">
+Or, la densité terminologique est sûrement un élément qui contribue à la perception de technicité  d'un texte, de sorte que nous pourrions être tentés de postuler une corrélation inverse entre elle et la tendance à permettre une plus grande variabilité terminologique dans un texte.
+</S>
+<S ID="27398">
+Toutefois, la  densité terminologique globale n'est certainement pas le facteur crucial qui détermine dans quels cas un réviseur décidera qu'un terme cible substitut est acceptable dans le contexte d'une traduction donnée.
+</S>
+<S ID="27616">
+Notre analyse semble indiquer que les termes les plus susceptibles d'être traduits par de  tels substituts sont les termes généraux et non techniques, dont le référent sera normalement évident pour tous les lecteurs.
+</S>
+<S ID="27795">
+Par exemple, «la province» est un substitut acceptable de  «gouvernement provincial» dans la plupart des contextes et, en fait, a été accepté par le réviseur dans le texte PPCI.
+</S>
+<S ID="27941">
+Encore une fois, s'il n'y a aucun risque d'ambiguïté pour le lecteur, ce genre de  variante peut contribuer à rendre le texte cible plus lisible.
+</S>
+<S ID="28126">
+Ailleurs dans l'ébauche de traduction du  texte PPCI, toutefois, les termes «project manager» et «reporting officer» sont tous deux rendus, dans certains cas, par «agent responsable»;
+</S>
+<S ID="28319">
+ici, le réviseur a jugé bon de corriger l'équivalent  substitut et de maintenir trois termes distincts, car ces diverses fonctions pourraient bien être assumées par des personnes différentes.
+</S>
+<S ID="28536">
+Un autre résultat à signaler, dans le tableau 5, est la forte proportion de cas, dans le texte Lait,  où le terme source n'est pas traduit, mais plutôt omis ou remplacé par une périphrase dans le texte cible :
+</S>
+<S ID="28622">
+dans ce texte, la catégorie «TS non traduit» représente 52 % des non-correspondances.
+</S>
+<S ID="28804">
+En  analysant les segments signalés par TransCheck dans l'ébauche de traduction et en les comparant à la version française finale, nous avons relevé plusieurs omissions flagrantes.
+</S>
+<S ID="28943">
+Un exemple est  donné en (6) ci- dessous (la flèche simple indique la traduction préliminaire et la flèche double, la traduction finale).
+</S>
+<S ID="28949">
+(6)
+</S>
+<S ID="28955" new>
+...
+</S>
+<S ID="29008" new>
+Canadian consumption of milk fat and milk proteins...
+</S>
+<S ID="29056">
+is relatively similar to that of   the U.S. ...
+</S>
+<S ID="29065" new>
+-> ...
+</S>
+<S ID="29122">
+la consommation canadienne est comparable à celle  de...
+</S>
+<S ID="29139" new>
+=> ...
+</S>
+<S ID="29248">
+la consommation individuelle canadienne de matière grasse et de protéines du  lait est comparable à celle...
+</S>
+<S ID="29412">
+Dans de nombreux autres cas, cependant, le problème n'est pas tant attribuable à une  omission du traducteur qu'à la verbosité du texte source.
+</S>
+<S ID="29717">
+La version anglaise du texte Lait se  distingue par une surabondance de longs composés nominaux pour lesquels, dans bien des cas, les éléments qui précèdent la  tête sont superflus ou encore peuvent être déduits facilement du contexte, et ne sont donc pas essentiels à la compréhension de l'expression.
+</S>
+<S ID="29894">
+Il se peut, dans de tels  cas, que le traducteur décide d'omettre une partie du syntagme nominal complexe, afin de produire un texte cible à la fois plus allégé et plus clair.
+</S>
+<S ID="29941">
+Un exemple simple est donné en (7) ci-dessous.
+</S>
+<S ID="30094">
+Le  terme cible pour «industrial milk» est «lait de transformation», qui est défini comme du lait cru qui sera transformé en fromage, en yogourt, etc.;
+</S>
+<S ID="30156">
+l'inclusion de l'adjectif «raw» est donc superflue dans  (7).
+</S>
+<S ID="30362">
+TransCheck, évidemment, n'a aucun moyen de le savoir, et dès qu'il trouve une occurrence de  «raw milk» non rendue par «lait cru», il signale une incohérence terminologique possible - à tort, dans ce cas.
+</S>
+<S ID="30368">
+(7)
+</S>
+<S ID="30375" new>
+...
+</S>
+<S ID="30428">
+for increased shares of industrial raw milk supplies
+</S>
+<S ID="30446" new>
+=>           	...
+</S>
+<S ID="30528">
+accroître leur part du marché de l'approvisionnement en lait de transformation...
+</S>
+<S ID="30579">
+Cet exemple soulève une importante question :
+</S>
+<S ID="30844">
+comment savoir lesquelles des non- correspondances signalées par TransCheck dans les traductions préliminaires représentent de réelles incohérences terminologiques, et lesquelles correspondent à de «faux positifs» attribuables à une déficience de notre approche?
+</S>
+<S ID="31004">
+Au départ, nous espérions pouvoir répondre à cette  question en faisant la comparaison entre les segments signalés et la terminologie des traductions finales;
+</S>
+<S ID="31239">
+toutefois, comme nous l'avons déjà indiqué, les traductions préliminaires n'ont pas fait  l'objet d'une révision systématique, mais seulement d'un processus d'assurance de la qualité visant à corriger les erreurs les plus flagrantes.
+</S>
+<S ID="31325">
+La personne ayant effectué l'assurance de la qualité a été  très franche à ce sujet :
+</S>
+<S ID="31417">
+elle a admis que les traductions finales pouvaient encore contenir certaines  incohérences;
+</S>
+<S ID="31518">
+malheureusement, elle n'avait disposé ni du temps ni des outils pour faire un travail  plus complet.
+</S>
+<S ID="31711">
+Néanmoins, il y a des conclusions que nous pouvons tirer sur le rendement de TransCheck à  partir de nos analyses détaillées de ces traductions, dont les résultats figurent au tableau 5.
+</S>
+<S ID="31907">
+Par  exemple, il est manifeste que la quasi-totalité des non-correspondances des catégories «Tête seulement» et «Pronom» sont attribuables à de faux positifs, c'est-à-dire à un bruit du système.
+</S>
+<S ID="31991">
+Pratiquement aucune d'elles n'a été corrigée dans les versions françaises finales.
+</S>
+<S ID="32281">
+Ensemble, ces  deux catégories regroupent près de 30 % de tous les segments signalés par TransCheck, et, si l'on ajoute les cas de termes coordonnés classés dans la catégorie «Autres», nous pouvons sans crainte affirmer que ces non-correspondances comptent pour environ un cas sur trois.
+</S>
+<S ID="32533">
+Par contre, une  proportion beaucoup plus grande des non-correspondances des catégories «Autre TC» et «TS non traduit» ont effectivement été corrigées par le réviseur, sans doute parce qu'elles reflétaient de véritables incohérences terminologiques.
+</S>
+<S ID="32687">
+Ces deux dernières catégories représentent globalement  entre 63 % et 73 % de toutes les erreurs potentielles signalées, soit environ deux cas sur trois.
+</S>
+<S ID="32847">
+Notons par ailleurs qu'il existe une différence assez fondamentale entre les non-correspondances  de ces deux regroupements des catégories de notre taxonomie.
+</S>
+<S ID="33166">
+Les non-correspondances du  premier groupe proviennent toutes de l'emploi de variantes de la forme du terme désigné : simplification d'un terme complexe pour n'en garder que la tête, combinaison avec un autre terme dans une coordination et, cas moins évident, remplacement par un pronom ou un autre type d'anaphore.
+</S>
+<S ID="33388">
+Par contre, les incohérences possibles signalées par le système en raison de l'omission  du terme, ou de son remplacement par une périphrase ou un autre terme, ne concernent pas seulement la forme superficielle du terme;
+</S>
+<S ID="33565">
+elles sont liées à sa redondance dans le texte, ou à la  synonymie du terme avec une périphrase ou un substitut proposé - des facteurs qui touchent davantage le sens du terme.
+</S>
+<S ID="33636">
+Nous allons revenir sur cette distinction dans la conclusion qui suit.
+</S>
+<S ID="33640">
+4.
+</S>
+<S ID="33651">
+Conclusion
+</S>
+<S ID="33912">
+Dans (Bédard 1986, notamment au chapitre 2), l'auteur critique ce qu'il appelle «l'obsession  des équivalents», c'est-à-dire la tendance à reproduire mécaniquement dans le texte cible les équivalents de tous les termes trouvés dans le texte source.
+</S>
+<S ID="34000">
+Il en résulte invariablement, affirme  l'auteur, des traductions de qualité inférieure.
+</S>
+<S ID="34199">
+Le traducteur n'est pas lié par le mot-à-mot du texte  source, mais par le sens du texte, et pour rendre ce dernier convenablement, il ne doit pas hésiter à se servir de son jugement professionnel.
+</S>
+<S ID="34346">
+Pour ce qui est de la terminologie technique, le traducteur  ne doit pas se sentir obligé d'utiliser «les équivalences directes ou toutes faites».
+</S>
+<S ID="34573">
+Afin de produire  un texte compréhensible et transparent dans la langue cible, il doit parfois modifier ou abréger certains termes, omettre d'autres termes qui figurent dans le texte source, et même créer de nouveaux termes.
+</S>
+<S ID="34708">
+«Une réalité donnée peut souvent être décrite de plus d'une façon, et le discours technique   n'échappe pas à cette vérité générale.
+</S>
+<S ID="34863">
+Les termes employés par le locuteur, si techniques           et si justes qu'ils soient, ne sont pas nécessairement les seuls dont il aurait pu se servir.
+</S>
+<S ID="34877">
+Corrolaire :
+</S>
+<S ID="34998">
+dans la même mesure, le traducteur n'est pas condamné à utiliser les  équivalents directs pour faire passer le message.»
+</S>
+<S ID="35018" new>
+(Bédard 1986, p.31)
+</S>
+<S ID="35196">
+Les arguments de Bédard semblent aller directement à l'encontre de l'approche automatisée  que nous présentons ici pour la vérification de la cohérence terminologique.
+</S>
+<S ID="35431">
+En effet, notre  application de TransCheck se fonde sur une transposition littérale des termes du texte source dans le texte cible - du moins pour les termes indiqués par le réviseur dans le glossaire d'équivalences terminologiques.
+</S>
+<S ID="35561">
+Il importe de rappeler, toutefois, que Transcheck est un outil d'aide à la  traduction, non un système de traduction automatique;
+</S>
+<S ID="35686">
+il n'a pas pour fonction d'imposer des  termes au réviseur, mais seulement de l'aider à valider une traduction préliminaire.
+</S>
+<S ID="35747">
+C'est le réviseur,  et non le système, qui a le dernier mot.
+</S>
+<S ID="35926">
+C'est au réviseur de décider s'il doit intervenir ou non pour  chaque incohérence terminologique possible signalée par le système et, le cas échéant, quelle correction apporter.
+</S>
+<S ID="36107">
+En revanche, l'approche visée par cette application de TransCheck suppose  que, pour certains types de textes du moins, un degré élevé d'uniformité terminologique est souhaitable.
+</S>
+<S ID="36295">
+Si ce n'était pas le cas, c'est-à-dire si les utilisateurs passaient outre systématiquement  aux erreurs possibles signalées par TransCheck, ils auraient tôt fait d'abandonner le système.
+</S>
+<S ID="36597">
+Dans notre examen des résultats à la section précédente, nous avons vu que pour les 100  termes choisis dans les quatre textes analysés, TransCheck a produit un taux de non- correspondance global se situant entre 16 % et 28 % (selon qu'on inclut ou non dans le calcul le texte Tireurs d'élite).
+</S>
+<S ID="36998">
+Nous avons également observé que, bien que notre méthodologie ne nous ait   pas permis d'établir précisément dans quelle proportion ces non-correspondances étaient de réelles incohérences, environ le tiers des segments signalés par le système pouvaient être considérés comme de faux positifs attribuables à l'incapacité de TransCheck de reconnaître certaines variantes formelles des termes cibles.
+</S>
+<S ID="37149">
+À cela s'ajoute un nombre indéterminé d'omissions ou de termes  substituts que le réviseur peut décider, pour diverses raisons, de laisser tels quels.
+</S>
+<S ID="37419">
+En bref, si ce  prototype de TransCheck était mis à la disposition des utilisateurs dans sa forme actuelle, dans au moins un cas sur trois le système demanderait à l'utilisateur de vérifier des incohérences possibles qui, en réalité, n'exigeraient pas d'intervention.
+</S>
+<S ID="37489">
+Est-ce un niveau de bruit que les utilisateurs sont  prêts à tolérer?
+</S>
+<S ID="37513">
+C'est difficile à dire;
+</S>
+<S ID="37669">
+cela dépendrait du temps que le système permettrait de gagner  par rapport aux autres erreurs signalées et des erreurs gênantes qu'il permettrait d'éviter.
+</S>
+<S ID="37696">
+Mais une  chose est sûre :
+</S>
+<S ID="37879">
+la vérification terminologique automatisée serait acceptée beaucoup plus  facilement si nous trouvions le moyen de réduire l'incidence du bruit actuellement engendré par le système.
+</S>
+<S ID="38004">
+Cela pourrait bien être possible, notamment dans les cas attribuables à des variantes de la  forme superficielle d'un terme.
+</S>
+<S ID="38049">
+La tâche à accomplir, ici, est très claire :
+</S>
+<S ID="38338">
+les conditions exigeant une  identité formelle complète dans la définition de cohérence terminologique dans TransCheck doivent être assouplies, afin que le système puisse reconnaître au moins certaines de ces variantes formelles comme des représentations valides du terme cible complet.
+</S>
+<S ID="38516">
+Dans quelle mesure nous  parviendrons à le faire sans que nous échappe aucune des incohérences terminologiques réelles présentement détectées par le système, cela reste à voir.
+</S>
+<S ID="38787">
+Mais il serait beaucoup plus difficile de  concevoir et de rendre opérationnelles des stratégies permettant au système de distinguer entre les cas acceptables et inacceptables de termes cibles qui ont été omis, ou encore remplacés par un autre terme ou une périphrase.
+</S>
+<S ID="38938">
+En fait, on pourrait se demander s'il n'est pas un peu abusif, dans ce cas,  de décrire les cas acceptables comme des cas de cohérence terminologique.
+</S>
+<S ID="39119">
+Quoi qu'il en soit, nous  croyons qu'il est préférable de laisser ces cas au jugement du réviseur, afin qu'il puisse les examiner tour à tour et prendre les décisions pertinentes.
+</S>
+<S ID="39457">
+L'objectif visé par cette étude était de déterminer si oui ou non il est possible de vérifier la  cohérence terminologique d'ébauches de traduction au moyen d'un outil comme TransCheck, en utilisant essentiellement la même approche que celle employée par le système pour détecter les problèmes d'interférence de la langue source.
+</S>
+<S ID="39756">
+Nous étions conscients, bien sûr, qu'en appliquant  notre définition naïve d'incohérence terminologique à des textes réels, nous relèverions à coup sûr des cas où la forme du terme cible, sans correspondre exactement à celle donnée dans le glossaire des équivalences, serait néanmoins acceptable.
+</S>
+<S ID="39951">
+Certains travaux récents sur l'extraction  automatique de termes décrivent de façon détaillée les diverses variantes d'un terme susceptibles d'être observées; voir en particulier (Daille 1994).
+</S>
+<S ID="40117">
+Le but n'était pas de vérifier s'il existe de telles  variantes, mais plutôt quelles formes elles prennent dans de véritables traductions, et avec quelle fréquence.
+</S>
+<S ID="40293">
+Cette étude, nous l'espérons, a fourni un début de réponse à cette question, et nous  permet de repérer un sous-ensemble de problèmes se prêtant à des solutions à court terme.
+</S>
+<S ID="40443">
+Notre façon d'aborder la vérification de la cohérence terminologique comporte (au moins)  deux faiblesses qui n'ont pas encore été mentionnées.
+</S>
+<S ID="40738">
+La première a trait à la directionalité  implicite de l'algorithme, c'est-à-dire le fait que TransCheck effectue sa recherche d'une paire de termes donnés en repérant d'abord une occurrence du terme source, puis en vérifiant le segment cible aligné pour y détecter la présence du terme cible.
+</S>
+<S ID="40848">
+Mais, bien sûr, les termes sources peuvent  aussi subir les mêmes variations de forme que les termes cibles :
+</S>
+<S ID="40950">
+eux aussi sont l'objet d'ellipses,  d'omissions, de pronominalisations, d'erreurs d'orthographe, etc.
+</S>
+<S ID="41178">
+Dans chacun de ces cas, étant  donné la stratégie de recherche d'équivalences exactes de TransCheck, le système passera outre au segment aligné sans s'occuper de vérifier le terme cible, réduisant ainsi le champ de couverture.
+</S>
+<S ID="41560">
+Il  y a une solution à laquelle on pense tout de suite pour résoudre ce problème : il s'agirait de convertir les entrées du glossaire des équivalences en requêtes bidirectionnelles, c'est-à-dire que pour chaque énoncé «e-terme1 = f-terme1», le système scruterait le bi-texte pour y trouver toute paire alignée dans laquelle le «f-terme» apparaît sans le «e-terme» correspondant.
+</S>
+<S ID="41632">
+Cette stratégie, toutefois,  présente un certain nombre de difficultés.
+</S>
+<S ID="41733">
+L'une d'elle tient au fait que les traductions sont souvent  plus explicites que les textes sources.
+</S>
+<S ID="41888">
+Nous avons mentionné à la note 8, par exemple, que le terme  «tireur d'élite» apparaît plus souvent dans le texte cible que «sniper» dans le texte source.
+</S>
+<S ID="42026">
+On peut  penser, par conséquent, que les requêtes inverses produiraient un niveau de bruit encore plus élevé que les requêtes initiales.
+</S>
+<S ID="42202">
+Autre difficulté, plus fondamentale celle-là : il se peut que ces requêtes  inverses ne correspondent pas aux équivalences terminologiques que le réviseur souhaitait vérifier.
+</S>
+<S ID="42418">
+En stipulant qu'un «e-terme1» donné doit être traduit par «f-terme1», le réviseur ne voulait peut- être pas exclure la possibilité que d'autres termes sources aient aussi f-terme1 comme équivalent en langue cible.
+</S>
+<S ID="42523">
+Or, la requête «f-terme1 MAIS NON e-terme1» entraînerait le marquage non désiré  de telles équivalences.
+</S>
+<S ID="42740">
+Un autre problème général que pose notre approche de vérification terminologique, c'est qu'il  oblige le réviseur à fournir au système un énoncé explicite de toutes les équivalences terminologiques à vérifier.
+</S>
+<S ID="42946">
+Sans aucun doute, il surviendra des cas où le réviseur n'aura pas le temps  de le faire, mais souhaitera quand même faire valider la cohérence terminologique de la traduction avant de l'envoyer au client.
+</S>
+<S ID="43117">
+Ce genre de vérification est possible pour les erreurs d'interférence de  la langue source, car TransCheck incorpore une base préexistante d'équivalents interdits connus.
+</S>
+<S ID="43351">
+On pourrait peut-être procéder de la même façon pour la vérification de la cohérence  terminologique, quand le texte à valider appartient manifestement à un domaine précis pour lequel un glossaire terminologique fiable existe déjà.
+</S>
+<S ID="43446">
+Une autre possibilité intéressante a récemment été soulevée dans (Dagan et Church 1994).
+</S>
+<S ID="43688">
+Leur système Termight extrait des termes candidats d'un texte source (comme notre programme F- TERM), puis repère automatiquement un équivalent probable dans la traduction, grâce à un programme d'alignement de mots qu'ils ont mis au point.
+</S>
+<S ID="43969">
+Termight pourrait être adapté à la  vérification de la cohérence terminologique, suggèrent les auteurs, si on lui confiait la tâche d'attirer l'attention de l'utilisateur sur les paires de termes correspondant aux cas où il existe plus d'un équivalent pour un même terme source.
+</S>
+<S ID="44113">
+Notons que ces non-correspondances incluraient  toutes les variantes formelles qui amènent actuellement TransCheck à signaler de faux positifs.
+</S>
+<S ID="44321">
+En  outre, l'utilisateur ne voudrait pas que le système omette de signaler les cas où toutes les occurrences d'un terme  source ont été systématiquement traduites par un équivalent identique, mais inexact;
+</S>
+<S ID="44396">
+nous avons, en fait, observé plusieurs cas de ce genre dans le texte PPCI.
+</S>
+<S ID="44615">
+Bien que  l'intervention du réviseur pour établir le glossaire d'équivalences terminologiques comporte des inconvénients, elle assure non seulement la cohérence de la terminologie vérifiée, mais aussi son exactitude.
+</S>
+<S ID="44632">
+REMERCIEMENTS
+</S>
+<S ID="44949">
+Plusieurs collègues du groupe de traduction assistée par ordinateur du CITI m'ont apporté leur  soutien, aussi bien technique que linguistique, tout au long de la réalisation de cette étude : Pierre Isabelle, directeur du groupe, Michel Simard, Marie-Louise Hannan, François Perrault et Jean- Marc Jutras.
+</S>
+<S ID="45103">
+J'ai beaucoup apprécié leur aide, et aucun d'eux, évidemment, n'est responsable de  toute erreur de fait ou de jugement que pourrait contenir ce rapport.
+</S>
+<S ID="45305">
+Je tiens aussi à remercier  spécialement le réviseur anonyme qui m'a aidé à obtenir les traductions analysées et qui a pris le temps, avec beaucoup de patience, de répondre à mes nombreuses questions.
+</S>
+<S ID="45319">
+RÉFÉRENCES
+</S>
+<S ID="45369" new>
+AHMAD, Khurshid et al. (1994), «What is a term?
+</S>
+<S ID="45559">
+The semi-automatic extraction of terms from  text», M. Snell-Horby et F. Pochhacker (dir.), Translation Studies: An Interdiscipline, Selected Proceedings of the Vienna Conference, pp.9-12.
+</S>
+<S ID="45653">
+BÉDARD, Claude (1986), La traduction technique : principes et pratque, Montréal, Linguatech.
+</S>
+<S ID="45847">
+DAILLE, Béatrice (1994), Approche Mixte pour l'extraction de terminologie : statistique lexicale  et filtres linguistique, Thèse de doctorat en informatique fondamentale, Université Paris VII.
+</S>
+<S ID="45969">
+DAGAN, Ido et Ken CHURCH (1994), «Termight: Identifying and Translating Technical  Terminology», in Proceedings of EACL.
+</S>
+<S ID="46127">
+HANNAN, Marie-Louise (1995), The Use of Semantic Classes for Automatic Terminology  Extraction, Mémoire de maîtrise en linguistique, Université de Montréal.
+</S>
+<S ID="46229">
+HARRIS, Brian (1988), «Bi-text: A New Concept in Translation Theory», dans Language  Monthly, no 54.
+</S>
+<S ID="46459">
+ISABELLE, Pierre et al.(1993), «Translation Analysis and Translation Automation», dans les  Actes de la Fifth International Conference on Theoretical and Methodological Issues in Machine Translation (TMI-93), Kyoto, pp.201-217.
+</S>
+<S ID="46699">
+JUSTESON, John et Slava KATZ (1993), «Technical Terminology: some linguistic properties and  an algorithm for identification in text», Technical Report #RC 18906 (82591), IBM T.J. Watson Research Center, Yorktown Heights, New York, 13 p.
+</S>
+<S ID="46952">
+MACKLOVITCH, Elliott (1994), «Using Bi-textual Alignment for Translation Validation: the  TransCheck System», dans les Actes de la First Conference of the Association for Machine Translation in the Americas (AMTA-94), Columbia, Maryland, pp. 157-168.
+</S>
+<S ID="47208">
+SIMARD, Michel, G. FOSTER et P. ISABELLE (1992), «Using Cognates to Align Sentences in  Parallel Corpora», dans les Actes de la Fourth International Conference on Theoretical and Methodological Issues in Machine Translation (TMI-92), Montréal, pp.67-81.
+</S>
+<S ID="47243">
+TransCheck : une recopie d'écran
+</S>
+</PAR>
+</CHUNK>
+</CHUNKLIST>
+</CESANA>
