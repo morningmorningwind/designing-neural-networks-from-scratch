@@ -423,12 +423,32 @@ $$h_t = \tanh(w_{ih} x_t + b_{ih}  +  w_{hh} h_{(t-1)} + b_{hh})$$
 其中， $h_t$ 是该层 $t$ 时刻的输出（隐藏状态，hidden state，或者历史信息）， $x_t$ 是 $t$ 时刻的新输入信息，$w_{ih}$ 和 $b_{ih}$ 依次是关于这个新的输入信息的一个权重张量和偏移（bias）张量。  类似地，$w_{hh}$ 和 $b_{hh}$ 则依次是关于前一时刻历史输出信息（如今作为输入）的一个权重张量和偏移张量。具体实现代码如下：
 
 ```python
-hello
+# 定义一个由单层线性层构成的的简单RNN单元
+class ERNN_Cell(nn.Module):
+    def __init__(self, input_size, hidden_size, activation=None):
+        super(ERNN_Cell,self).__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.activation = activation
+        self.input_x = nn.Linear(self.input_size, self.hidden_size)
+        self.input_h = nn.Linear(self.hidden_size, self.hidden_size)
+        
+    def forward(self, x, h):
+        x = self.input_x(x)
+        h = self.input_h(h)
+        if activation is not None:
+            return activation(x+h)
+        else:
+            return x + h
 ```
+
+接下来，我们基于此，进一步定义一个简单卷积神经网络。当我们输入一个特定长度的序列的时候，它会输出一个长度相同的序列。
 #### 2) LSTM
 以下是长短记忆（LSTM）神经网络的数学定义：
 
 $$ i_t = \sigma(W_{ii} x_t + b_{ii} + W_{hi} h_{(t-1)} + b_{hi}) $$ $$f_t = \sigma(W_{if} x_t + b_{if} + W_{hf} h_{(t-1)} + b_{hf}) $$ $$g_t = \tanh(W_{ig} x_t + b_{ig} + W_{hg} h_{(t-1)} + b_{hg}) $$ $$o_t = \sigma(W_{io} x_t + b_{io} + W_{ho} h_{(t-1)} + b_{ho}) $$ $$c_t = f_t c_{(t-1)} + i_t g_t $$ $$h_t = o_t \tanh(c_t)$$
+
+其中，$\sigma$ 是 Sigmoid 函数。 LSTM神经网络可以有很多变种，这些变种的表现也是参差不齐。以上给出的是一种比较经典的形式。以上的数学定义看上去有些复杂。我们只需要理解，凡是由 $\sigma$ 包裹的量，都相当于一个门开关（Gate），它的值是在 0 和 1 之间。用它去乘一个张量，就能控制这个张量里边每一个元素的的权重。一个开关，是一个控制器，而这个与之相乘的张量，则是被控制对象。而掌控开关的，则是控制者，由另一个张量充当。这个控制者需要根据当前系统状态、新的输入等信息来做决策。在实践中，LSTM 的表达能力往往要优于简单 RNN，其关键点就在于引入了控制信息流的 Sigmoid 开关。这种开关本身由神经网络构成，因此，能够有效增加神经网络的复杂度和表达能力。值得一提的是，这种开关，从物理学角度来看，就好比人类思维里，对注意力的控制。例如，当我们观察一个图片的时候，我们并非没有重点的观察，而是往往根据过去的习性、当前的信息状况等，生成一个权重，将某些不感兴趣的信息过滤掉，把大部分注意力放在感兴趣的部分。注意力机制，是一个很普遍的机制，我们将在[第六章](6-attention_mechanism.md)进行更多的讨论。由于LSTM的结构相对比较复杂，而下一张的GRU，可以认为是LSTM的精华浓缩版，其表现跟LSTM不相上下，甚至更好。因此，我们此处略去LSTM的代码，而在下一小节，提供GRU的代码。
 
 #### 3) GRU
 
