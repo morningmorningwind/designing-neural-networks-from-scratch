@@ -423,38 +423,118 @@ $$h_t = \tanh(w_{ih} x_t + b_{ih}  +  w_{hh} h_{(t-1)} + b_{hh})$$
 其中， $h_t$ 是该层 $t$ 时刻的输出（隐藏状态，hidden state，或者历史信息）， $x_t$ 是 $t$ 时刻的新输入信息，$w_{ih}$ 和 $b_{ih}$ 依次是关于这个新的输入信息的一个权重张量和偏移（bias）张量。  类似地，$w_{hh}$ 和 $b_{hh}$ 则依次是关于前一时刻历史输出信息（如今作为输入）的一个权重张量和偏移张量。具体实现代码如下：
 
 ```python
-# 定义一个由单层线性层构成的的简单RNN单元
-class ERNN_Cell(nn.Module):
-    def __init__(self, input_size, hidden_size, activation=None):
-        super(ERNN_Cell,self).__init__()
+# 定义一个简单RNN层
+class ERNN(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super(ERNN,self).__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
-        self.activation = activation
-        self.input_x = nn.Linear(self.input_size, self.hidden_size)
-        self.input_h = nn.Linear(self.hidden_size, self.hidden_size)
+        self.ih_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hh_linear = nn.Linear(self.hidden_size, self.hidden_size)
         
-    def forward(self, x, h):
-        x = self.input_x(x)
-        h = self.input_h(h)
-        if activation is not None:
-            return activation(x+h)
-        else:
-            return x + h
+    def init_h(self, x):
+        self.ht = torch.randn_like(x[0])
+    
+    def forward(self, x, h=None):
+        if h is None:
+            self.init_h(x)
+        seq_length, batch_size, input_size = x.size()
+        y = []
+        for t in range(seq_length):
+            self.ht = torch.tanh(self.ih_linear(x[t]) + self.hh_linear(self.ht))
+            y.append(self.ht.unsqueeze(0))
+        y = torch.cat(y)
+        return y, self.ht
 ```
 
 接下来，我们基于此，进一步定义一个简单卷积神经网络。当我们输入一个特定长度的序列的时候，它会输出一个长度相同的序列。
 #### 2) LSTM
 以下是长短记忆（LSTM）神经网络的数学定义：
 
-$$ i_t = \sigma(W_{ii} x_t + b_{ii} + W_{hi} h_{(t-1)} + b_{hi}) $$ $$f_t = \sigma(W_{if} x_t + b_{if} + W_{hf} h_{(t-1)} + b_{hf}) $$ $$g_t = \tanh(W_{ig} x_t + b_{ig} + W_{hg} h_{(t-1)} + b_{hg}) $$ $$o_t = \sigma(W_{io} x_t + b_{io} + W_{ho} h_{(t-1)} + b_{ho}) $$ $$c_t = f_t c_{(t-1)} + i_t g_t $$ $$h_t = o_t \tanh(c_t)$$
+$$ i_t = \sigma(W_{ii} x_t + b_{ii} + W_{hi} h_{(t-1)} + b_{hi}) $$ $$f_t = \sigma(W_{if} x_t + b_{if} + W_{hf} h_{(t-1)} + b_{hf}) $$ $$g_t = \tanh(W_{ig} x_t + b_{ig} + W_{hg} h_{(t-1)} + b_{hg}) $$ $$o_t = \sigma(W_{io} x_t + b_{io} + W_{ho} h_{(t-1)} + b_{ho}) $$ $$c_t = f_t  * c_{(t-1)} + i_t * g_t $$ $$h_t = o_t * \tanh(c_t)$$
 
-其中，$\sigma$ 是 Sigmoid 函数。 LSTM神经网络可以有很多变种，这些变种的表现也是参差不齐。以上给出的是一种比较经典的形式。以上的数学定义看上去有些复杂。我们只需要理解，凡是由 $\sigma$ 包裹的量，都相当于一个门开关（Gate），它的值是在 0 和 1 之间。用它去乘一个张量，就能控制这个张量里边每一个元素的的权重。一个开关，是一个控制器，而这个与之相乘的张量，则是被控制对象。而掌控开关的，则是控制者，由另一个张量充当。这个控制者需要根据当前系统状态、新的输入等信息来做决策。在实践中，LSTM 的表达能力往往要优于简单 RNN，其关键点就在于引入了控制信息流的 Sigmoid 开关。这种开关本身由神经网络构成，因此，能够有效增加神经网络的复杂度和表达能力。值得一提的是，这种开关，从物理学角度来看，就好比人类思维里，对注意力的控制。例如，当我们观察一个图片的时候，我们并非没有重点的观察，而是往往根据过去的习性、当前的信息状况等，生成一个权重，将某些不感兴趣的信息过滤掉，把大部分注意力放在感兴趣的部分。注意力机制，是一个很普遍的机制，我们将在[第六章](6-attention_mechanism.md)进行更多的讨论。由于LSTM的结构相对比较复杂，而下一张的GRU，可以认为是LSTM的精华浓缩版，其表现跟LSTM不相上下，甚至更好。因此，我们此处略去LSTM的代码，而在下一小节，提供GRU的代码。
+其中，$\sigma$ 是 Sigmoid 函数，$*$ 代表两个形状相同的张量逐一元素相乘。 LSTM神经网络可以有很多变种，这些变种的表现也是参差不齐。以上给出的是一种比较经典的形式。以上的数学定义看上去有些复杂。我们只需要理解，凡是由 $\sigma$ 包裹的量，都相当于一个门开关（Gate），它的值是在 0 和 1 之间。用它去乘一个张量，就能控制这个张量里边每一个元素的的权重。一个开关，是一个控制器，而这个与之相乘的张量，则是被控制对象。而掌控开关的，则是控制者，由另一个张量充当。这个控制者需要根据当前系统状态、新的输入等信息来做决策。在实践中，LSTM 的表达能力往往要优于简单 RNN，其关键点就在于引入了控制信息流的 Sigmoid 开关。这种开关本身由神经网络构成，因此，能够有效增加神经网络的复杂度和表达能力。值得一提的是，这种开关，从物理学角度来看，就好比人类思维里，对注意力的控制。例如，当我们观察一个图片的时候，我们并非没有重点的观察，而是往往根据过去的习性、当前的信息状况等，生成一个权重，将某些不感兴趣的信息过滤掉，把大部分注意力放在感兴趣的部分。注意力机制，是一个很普遍的机制，我们将在[第六章](6-attention_mechanism.md)进行更多的讨论。以下是LSTM的实现代码：
+
+```python
+# 定义一个LSTM层
+class LSTM(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super(LSTM,self).__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.ii_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hi_linear = nn.Linear(self.hidden_size, self.hidden_size)
+        self.if_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hf_linear = nn.Linear(self.hidden_size, self.hidden_size)
+        self.ig_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hg_linear = nn.Linear(self.hidden_size, self.hidden_size)
+        self.io_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.ho_linear = nn.Linear(self.hidden_size, self.hidden_size)
+    def init_h(self, x):
+        self.ht = torch.randn_like(x[0])
+    def init_c(self, x):
+        self.ct = torch.randn_like(x[0])
+    
+    def forward(self, x, h=None, c=None):
+        if h is None:
+            self.init_h(x)
+        if c is None:
+            self.init_c(x)
+        seq_length, batch_size, input_size = x.size()
+        y = []
+        for t in range(seq_length):
+            it = torch.sigmoid(self.ii_linear(x[t]) + self.hi_linear(self.ht))
+            ft = torch.sigmoid(self.if_linear(x[t]) + self.hf_linear(self.ht))
+            gt = torch.tanh(self.ig_linear(x[t]) + self.hg_linear(self.ht))
+            ot = torch.sigmoid(self.io_linear(x[t]) + self.ho_linear(self.ht))
+            self.ct = ft * self.ct + it * gt
+            self.ht = ot * torch.tanh(self.ct)
+            y.append(self.ht.unsqueeze(0))
+        y = torch.cat(y)
+        return y, self.ht
+```
 
 #### 3) GRU
 
-$$ r_t = \sigma(W_{ir} x_t + b_{ir} + W_{hr} h_{(t-1)} + b_{hr}) $$ $$z_t = \sigma(W_{iz} x_t + b_{iz} + W_{hz} h_{(t-1)} + b_{hz}) $$ $$n_t = \tanh(W_{in} x_t + b_{in} + r_t (W_{hn} h_{(t-1)}+ b_{hn})) $$ $$h_t = (1 - z_t) n_t + z_t h_{(t-1)}$$
+GRU，可以认为是LSTM的精华浓缩版，其表现不亚于 LSTM。GRU层的定义如下：
+
+$$ r_t = \sigma(W_{ir} x_t + b_{ir} + W_{hr} h_{(t-1)} + b_{hr}) $$ $$z_t = \sigma(W_{iz} x_t + b_{iz} + W_{hz} h_{(t-1)} + b_{hz}) $$ $$n_t = \tanh(W_{in} x_t + b_{in} + r_t * (W_{hn} h_{(t-1)}+ b_{hn})) $$ $$h_t = (1 - z_t) * n_t + z_t * h_{(t-1)}$$
+
+其中 $r_t$ 很大时，代表系统历史状态对当前的影响很大，但是同时，新信息的影响也在考虑之中。$r_t$ 类似于一个子开关。而当 $z_t$ 很大时，代表新信息可以被忽略，下一时刻输出由历史信息决定。$z_t$ 类似于一个总开关。以下是实现代码：
+
+```python
+# 定义一个GRU层
+class GRU(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super(GRU,self).__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.in_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hn_linear = nn.Linear(self.hidden_size, self.hidden_size)
+        self.ir_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hr_linear = nn.Linear(self.hidden_size, self.hidden_size)
+        self.iz_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hz_linear = nn.Linear(self.hidden_size, self.hidden_size)
+    def init_h(self, x):
+        self.ht = torch.randn_like(x[0])
+    
+    def forward(self, x, h=None):
+        if h is None:
+            self.init_h(x)
+        seq_length, batch_size, input_size = x.size()
+        y = []
+        for t in range(seq_length):
+            rt = torch.sigmoid(self.ir_linear(x[t]) + self.hr_linear(self.ht))
+            zt = torch.sigmoid(self.iz_linear(x[t]) + self.hz_linear(self.ht))
+            nt = torch.tanh(self.in_linear(x[t]) + rt * self.hn_linear(self.ht))
+            self.ht = (1 - zt) * nt + zt * self.ht
+            y.append(self.ht.unsqueeze(0))
+        y = torch.cat(y)
+        return y, self.ht
+```
 
 ### 1.3 递归层运用和特点探讨
+接下来，我们来通过一个应用来探讨递归层的特性。
 ## 3. 卷积层
 ### 1.1 什么是卷积层
 ### 1.2 手把手构建一个卷积层
