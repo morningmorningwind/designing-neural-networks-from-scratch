@@ -534,7 +534,448 @@ class GRU(nn.Module):
 ```
 
 ### 1.3 递归层运用和特点探讨
-接下来，我们来通过一个应用来探讨递归层的特性。
+接下来，我们来通过一个应用来探讨递归层的特性。我们将不同的RNN运用到一个简单的文本翻译数据集上来。然后对比他们的损失函数以及[BLEU](https://cloud.tencent.com/developer/article/1042161)分数随时间的演化。首先，我们导入基本模块：
+
+```python
+# 导入模块
+%matplotlib inline
+import torch
+import numpy as np
+import pylab as pl
+from torch import nn
+from nltk.translate import bleu_score
+import re
+import codecs
+
+torch.manual_seed(1)
+np.random.seed(1)
+```
+
+我们事先用 [GloVe](https://github.com/stanfordnlp/GloVe) 生成了所有词汇和标点的矢量表示（embedding）。我们设置每一个词汇或符号的矢量的维度为128维。接下来，我们读入训练数据：
+
+```python
+# 读入用GloVe处理得到的文字 embeddings，以及构建字典
+with codecs.open('data/translation/embedding_128.txt', mode='r', encoding='utf-8') as f:
+    lines = f.readlines()
+n_words = len(lines) + 1 # 此处+1是考虑空格也算一个符号
+word_emb_dim = input_size = 128 # 词矢量的长度
+word_embeddings = torch.nn.Embedding(n_words, word_emb_dim) # 初始化一个储存词矢量的张量。
+i2w = {0:''} # 字典：index to word
+w2i = {'':0} # 字典：word to index
+for i in range(0, n_words - 1):
+    line = lines[i].split(' ')
+    i2w[i + 1] = line[0]
+    w2i[line[0]] = i + 1
+    word_embeddings.weight[i+1] = torch.from_numpy(np.array(line[1:],dtype=np.float32))
+word_embeddings.weight.require_grad = False # 让 embedding 为常量。不计算其梯度。
+
+max_sentence_length = 30 # 一个句子中最大单词或标点符号数目
+
+# 读取训练用句子数据：
+with codecs.open('data/translation/training-es.txt', mode='r', encoding='utf-8') as f:
+    lines = f.readlines()
+source = [map(w2i.get, re.split('\s+',x))[:max_sentence_length] for x in lines]
+with codecs.open('data/translation/training-en.txt', mode='r', encoding='utf-8') as f:
+    lines = f.readlines()
+target = [map(w2i.get, re.split('\s+',x))[:max_sentence_length] for x in lines]
+
+n_sentences = len(source)
+
+print('Data summary:\n\nnumber of sentences: {}\nnumber of words: {}\n'.format(n_sentences, n_words))
+print('Source examples:\n\n'+'\n'.join([' '.join(map(i2w.get, x)) for x in source[:5]])+'\n')
+print('Target examples:\n\n'+'\n'.join([' '.join(map(i2w.get, x)) for x in target[:5]]))
+```
+
+输出结果如下：
+
+```
+Data summary:
+
+number of sentences: 9900
+number of words: 973
+
+Source examples:
+
+'? le importar'ia darnos las llaves de la habitaci'on , por favor ? 
+he hecho la reserva de una habitaci'on tranquila doble con tel'efono y televisi'on a nombre de Rosario Cabedo . 
+'? le importar'ia cambiarme a otra habitaci'on m'as tranquila ? 
+por favor , tengo reservada una habitaci'on . 
+me parece que existe un problema . 
+
+Target examples:
+
+would you mind giving us the keys to the room , please ? 
+I have made a reservation for a quiet , double room with a telephone and a tv for Rosario Cabedo . 
+would you mind moving me to a quieter room ? 
+I have booked a room . 
+I think that there is a problem . 
+
+```
+
+然后，我们读入测试数据：
+
+```python
+# 读取测试数据
+
+with codecs.open('data/translation/test-es.txt', mode='r', encoding='utf-8') as f:
+    lines = f.readlines()
+source_test = [map(w2i.get, re.split('\s+',x))[:max_sentence_length] for x in lines]
+with codecs.open('data/translation/test-en.txt', mode='r', encoding='utf-8') as f:
+    lines = f.readlines()
+target_test = [map(w2i.get, re.split('\s+',x))[:max_sentence_length] for x in lines]
+
+n_sentences_test = len(source_test)
+
+print('Data summary:\n\nnumber of sentences: {}\n'.format(n_sentences_test))
+print('Testing source examples:\n\n'+'\n'.join([' '.join(map(i2w.get, x)) for x in source_test[:5]])+'\n')
+print('Testing target examples:\n\n'+'\n'.join([' '.join(map(i2w.get, x)) for x in target_test[:5]]))
+```
+
+输出结果如下：
+
+```
+Data summary:
+
+number of sentences: 2996
+
+Testing source examples:
+
+por favor , desear'ia reservar una habitaci'on hasta ma~nana . 
+por favor , despi'ertenos ma~nana a las siete y cuarto . 
+voy a marcharme hoy por la tarde . 
+por favor , '? les importar'ia bajar nuestro equipaje a la habitaci'on n'umero cero trece ? 
+'? me podr'ian dar la llave de la habitaci'on dos cuatro cuatro , por favor ? 
+
+Testing target examples:
+
+I would like to book a room until tomorrow , please . 
+please wake us up tomorrow at a quarter past seven . 
+I am leaving today in the afternoon . 
+would you mind sending down our luggage to room number oh one three , please ? 
+could you give me the key to room number two four four , please ? 
+```
+
+
+接下来，我们定义各种类型的RNN，以及定义一个DNN（致密层）：
+
+```python
+# 定义一个简单RNN层
+class ERNN(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super(ERNN,self).__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.ih_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hh_linear = nn.Linear(self.hidden_size, self.hidden_size)
+        
+    def init_h(self, x):
+        self.ht = torch.randn_like(x[0])
+    
+    def forward(self, x, h=None):
+        if h is None:
+            self.init_h(x)
+        seq_length, batch_size, input_size = x.size()
+        y = []
+        for t in range(seq_length):
+            self.ht = torch.tanh(self.ih_linear(x[t]) + self.hh_linear(self.ht))
+            y.append(self.ht.unsqueeze(0))
+        y = torch.cat(y)
+        return y, self.ht
+
+# 定义一个LSTM层
+class LSTM(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super(LSTM,self).__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.ii_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hi_linear = nn.Linear(self.hidden_size, self.hidden_size)
+        self.if_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hf_linear = nn.Linear(self.hidden_size, self.hidden_size)
+        self.ig_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hg_linear = nn.Linear(self.hidden_size, self.hidden_size)
+        self.io_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.ho_linear = nn.Linear(self.hidden_size, self.hidden_size)
+    def init_h(self, x):
+        self.ht = torch.randn_like(x[0])
+    def init_c(self, x):
+        self.ct = torch.randn_like(x[0])
+    
+    def forward(self, x, h=None, c=None):
+        if h is None:
+            self.init_h(x)
+        if c is None:
+            self.init_c(x)
+        seq_length, batch_size, input_size = x.size()
+        y = []
+        for t in range(seq_length):
+            it = torch.sigmoid(self.ii_linear(x[t]) + self.hi_linear(self.ht))
+            ft = torch.sigmoid(self.if_linear(x[t]) + self.hf_linear(self.ht))
+            gt = torch.tanh(self.ig_linear(x[t]) + self.hg_linear(self.ht))
+            ot = torch.sigmoid(self.io_linear(x[t]) + self.ho_linear(self.ht))
+            self.ct = ft * self.ct + it * gt
+            self.ht = ot * torch.tanh(self.ct)
+            y.append(self.ht.unsqueeze(0))
+        y = torch.cat(y)
+        return y, self.ht
+
+    
+# 定义一个GRU层
+class GRU(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super(GRU,self).__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.in_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hn_linear = nn.Linear(self.hidden_size, self.hidden_size)
+        self.ir_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hr_linear = nn.Linear(self.hidden_size, self.hidden_size)
+        self.iz_linear = nn.Linear(self.input_size, self.hidden_size)
+        self.hz_linear = nn.Linear(self.hidden_size, self.hidden_size)
+    def init_h(self, x):
+        self.ht = torch.randn_like(x[0])
+    
+    def forward(self, x, h=None):
+        if h is None:
+            self.init_h(x)
+        seq_length, batch_size, input_size = x.size()
+        y = []
+        for t in range(seq_length):
+            rt = torch.sigmoid(self.ir_linear(x[t]) + self.hr_linear(self.ht))
+            zt = torch.sigmoid(self.iz_linear(x[t]) + self.hz_linear(self.ht))
+            nt = torch.tanh(self.in_linear(x[t]) + rt * self.hn_linear(self.ht))
+            self.ht = (1 - zt) * nt + zt * self.ht
+            y.append(self.ht.unsqueeze(0))
+        y = torch.cat(y)
+        return y, self.ht
+
+# 定义一个深度为2的致密层
+class DNN(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super(DNN,self).__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.input = nn.Linear(input_size, hidden_size)
+        self.hidden = nn.Linear(hidden_size, output_size)
+    def forward(self,x, place_holder=None):
+        seq_length, batch_size, input_size = x.size()
+        x = x.transpose(0,1).contiguous().view(batch_size,-1)
+        x = torch.tanh(self.input(x))
+        x = torch.tanh(self.hidden(x))
+        x = x.view(batch_size, seq_length, hidden_size).transpose(0,1)
+        return x, place_holder
+    
+# 定义一个翻译模型
+class Translator(nn.Module):
+    def __init__(self, mode, input_size, output_size, hidden_size):
+        super(Translator, self).__init__()
+        self.input_size = input_size
+        self.output_size = output_size
+        self.hidden_size = hidden_size
+        self.mode = mode
+        if self.mode == 'LSTM':
+            self.rnn = LSTM(self.input_size, self.hidden_size)
+        if self.mode == 'GRU':
+            self.rnn = GRU(self.input_size, self.hidden_size)
+        if self.mode == 'ERNN':
+            self.rnn = ERNN(self.input_size, self.hidden_size)
+        if self.mode == 'DNN':
+            self.rnn = DNN(self.input_size*max_sentence_length, self.hidden_size, self.hidden_size*max_sentence_length)
+        self.output = nn.Linear(self.hidden_size, self.output_size)
+        self.logsoftmax = torch.nn.LogSoftmax(dim=-1)
+    def forward(self, x, h0=None):
+        seq_length, batch_size, input_size = x.size()
+        y, ht = self.rnn(x, h0)
+        y = y.contiguous().view(-1, self.hidden_size)
+        y = self.output(y)
+        y = y.view(seq_length, batch_size, output_size)
+        y = self.logsoftmax(y)
+        return y, ht
+```
+下一步，我们定义一些辅助函数：
+
+```python
+# 定义一个函数，随机返回一个 mini batch，用于训练。返回的 batch 尺寸为  “句子长度 x batch 尺寸 x 1”
+def get_batch(batch_size=1, full=False):
+    if full:
+        batch_src = source
+        batch_tgt = target
+    else:
+        sample_indices = np.random.randint(0, n_sentences, batch_size)
+        batch_src = [source[i][:] for i in sample_indices]
+        batch_tgt = [target[i][:] for i in sample_indices]
+    for i in range(len(batch_src)):
+        for j in range(len(batch_src[i]),max_sentence_length):
+            batch_src[i].append(w2i[''])
+    for i in range(len(batch_src)):
+        for j in range(len(batch_tgt[i]),max_sentence_length):
+            batch_tgt[i].append(w2i[''])
+    batch_src = torch.LongTensor(batch_src).detach().unsqueeze(2).transpose(0,1)
+    batch_tgt = torch.LongTensor(batch_tgt).detach().unsqueeze(2).transpose(0,1)
+    x = batch_src
+    y = batch_tgt
+    return x, y
+
+# 返回一个测试用的mini batch，尺寸为 “句子长度 x batch 尺寸 x 1”
+def get_test_batch(batch_size=1, full=False):
+    if full:
+        batch_src = source_test
+        batch_tgt = target_test
+    else:
+        sample_indices = np.random.randint(0, n_sentences_test, batch_size)
+        batch_src = [source_test[i][:] for i in sample_indices]
+        batch_tgt = [target_test[i][:] for i in sample_indices]
+    for i in range(len(batch_src)):
+        for j in range(len(batch_src[i]),max_sentence_length):
+            batch_src[i].append(w2i[''])
+    for i in range(len(batch_src)):
+        for j in range(len(batch_tgt[i]),max_sentence_length):
+            batch_tgt[i].append(w2i[''])
+    batch_src = torch.LongTensor(batch_src).detach().unsqueeze(2).transpose(0,1)
+    batch_tgt = torch.LongTensor(batch_tgt).detach().unsqueeze(2).transpose(0,1)
+    x = batch_src
+    y = batch_tgt
+    return x, y
+
+# 输入一个由词汇ID构成的batch，输出由词汇的embedding构成的batch，用作模型的输入。
+def idx2emb(x):
+    return word_embeddings(x.type(torch.long)).squeeze(-2).detach()
+    
+
+# 定义一个函数，输入一个由词汇ID构成的batch，返回由词汇构成的句子。
+def batch2sent(batch, aslist=False):
+    S = []
+    batch = batch.type(torch.int32).detach()
+    seq_length, batch_size, emb_size = batch.size()
+    for i in range(batch_size):
+        S.append(' '.join(map(i2w.get, batch[:,i,:].view(-1).tolist())))
+    if not aslist: 
+        S = u'\n'.join(S)
+    return S
+
+# 举个例子
+x, y = get_batch(2)
+print(batch2sent(x))
+print(batch2sent(y))
+
+# 计算一个batch的预测结果的BLEU分数
+def batch_bleu(batch_data, batch_pred):
+    batch_data = map(lambda x:[x], map(list, batch_data))
+    batch_pred = map(list, batch_pred)
+    return bleu_score.corpus_bleu(batch_data, batch_pred)
+
+# 输入一个有词汇ID构成的batch，输出其翻译文本
+def translate(model, src):
+    with torch.no_grad():
+        src = idx2emb(src)
+        tgt, ht = model(src)
+        tgt = torch.argmax(tgt,-1, keepdim=True).detach()
+        sent = batch2sent(tgt)
+        return sent
+```
+运行结果如下：
+
+```
+por favor , una habitaci'on .                        
+me voy a marchar hoy a la una de la tarde .                  
+a room , please .                         
+I am leaving today at one in the afternoon .                    
+```
+
+接下来，我们对模型进行训练：
+
+```python
+# 训练一个简单的 RNN 模型以生成诗歌
+
+input_size = word_emb_dim
+hidden_size = 128
+output_size = n_words
+mode = 'DNN'# 'ERNN','LSTM','GRU','DNN'
+model = Translator(mode, input_size, output_size, hidden_size)
+
+lr = 1e-3
+n_epochs = 3000
+last_epoch = -1
+disp_interval = 50
+batch_size = 10
+
+loss_func = nn.NLLLoss()
+optimizer = torch.optim.Adam(model.parameters(),lr=lr)
+
+torch.manual_seed(1)
+np.random.seed(1)
+
+def lr_lambda(epoch):
+    return 0.99**(epoch/50.0)
+
+scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda, last_epoch=last_epoch)
+
+Loss = []
+BLEU = []
+
+继续上次运行时，取消以下三行的注释
+# model.load_state_dict(torch.load('saves/model-'+mode+'.pt'))
+# Loss = np.load('saves/Loss-'+mode+'.npy').tolist()
+# BLEU = np.load('saves/BLEU-'+mode+'.npy').tolist()
+
+for epoch in range(n_epochs):
+    model.zero_grad()
+    x_obs, y_obs = get_batch(batch_size=batch_size)
+    x_obs = idx2emb(x_obs)
+    y_pred, ht = model(x_obs)
+    y1 = torch.argmax(y_pred.detach(),-1,keepdim=True).detach()
+    y2 = y_obs.detach() 
+    y_pred = y_pred.view(-1,output_size)
+    y_obs = y_obs.contiguous().view(-1)
+    loss = loss_func(y_pred,y_obs)
+    loss.backward()
+    Loss.append(loss.tolist())
+
+    x_test,  y_test = get_test_batch(100)
+    bleu_test = batch_bleu(translate(model,x_test).split('\n'), batch2sent(y_test).split('\n'))
+    BLEU.append(bleu_test)
+    
+    optimizer.step()
+    scheduler.step()
+    if epoch % disp_interval == 0:
+        x_test,  y_test = get_test_batch(1)
+        print(u'Epoch{}, Loss{}, BLEU{}, \nPred:\n{}\nObs:\n{}\n'.format(epoch,loss.tolist(),round(BLEU[-1],2), translate(model,x_test), batch2sent(y_test)))
+        torch.save(model.state_dict(),'saves/model-'+mode+'.pt')
+np.save('saves/Loss-'+mode+'.npy', Loss)
+np.save('saves/BLEU-'+mode+'.npy', BLEU)
+```
+最后，我们来绘图：
+
+```python
+# 绘图
+fig = pl.figure(1)
+window_size = 50
+for mode in ['ERNN','LSTM','GRU','DNN']:
+    Loss = np.load('saves/Loss-'+mode+'.npy').tolist()
+    avg_losses = np.array(Loss)[:len(Loss)//50 *50].reshape([-1,window_size]).mean(1)
+    pl.plot(np.arange(0,len(Loss)//50 *50,window_size), avg_losses,label=mode)
+    pl.xlabel('Time')
+    pl.ylabel('Loss')
+    pl.yscale('log')
+    pl.legend(loc='best')
+    
+fig = pl.figure(2)
+window_size = 50
+for mode in ['ERNN','LSTM','GRU','DNN']:
+    BLEU = np.load('saves/BLEU-'+mode+'.npy').tolist()
+    avg_losses = np.array(BLEU)[:len(BLEU)//50 *50].reshape([-1,window_size]).mean(1)
+    pl.plot(np.arange(0,len(BLEU)//50 *50,window_size), avg_losses,label=mode)
+    pl.xlabel('Time')
+    pl.ylabel('BLEU')
+    pl.legend(loc='best')
+```
+绘制的结果如下：
+
+![fig8](figs/ch2/fig8.png)
+
+![fig8](figs/ch2/fig9.png)
+
+由上图可见，表现由优到劣排序依次是 $GRU >  LSTM \approx ERNN > DNN$。需要注意的是，本实验尚未收敛。
 ## 3. 卷积层
 ### 1.1 什么是卷积层
 ### 1.2 手把手构建一个卷积层
