@@ -984,7 +984,66 @@ for mode in ['ERNN','LSTM','GRU','DNN']:
 ### 1.2 手把手构建一个卷积层
 接下来，我们用 pytorch 徒手构建一个二维的卷积层（其他维度的类似，此处略去）。代码如下：
 
+```python
+class Conv2D(nn.Module):
+    def __init__(self, n_channels, kernel_size):
+    '''
+    n_channels: 整数，测量矩阵W的数目
+    kernel_size: tuple, 每一个W的尺寸
+    '''
+        super(Conv2D, self).__init__()
+        self.n_channels = n_channels
+        self.kernel_size = kernel_size
+        self.W = nn.Parameter(torch.randn(n_channels, *kernel_size))
+    def forward(self, x):
+        batch_size, n_rows, n_cols = x.size()
+        out = []
+        for c in range(0, self.n_channels):
+            out_c = []
+            for i in range(0, n_rows - self.kernel_size[0] + 1):
+                for j in range(0, n_cols - self.kernel_size[1] + 1):
+                    out_c.append(torch.sum(torch.sum(x[:,i:i + self.kernel_size[0], j:j + self.kernel_size[1]]*self.W[c],-1),-1).unsqueeze(1))
+            out_c = torch.cat(out_c,-1).view(-1,1, n_rows - self.kernel_size[0] + 1, n_cols - self.kernel_size[1] + 1)
+            out.append(out_c)
+        return torch.cat(out,1)
+```
+
+例子（对应上图所示的例子）：
+
+```python
+X = torch.FloatTensor([[1,1,1,0,0],[0,1,1,1,0],[0,0,1,1,1],[0,0,1,1,0],[0,1,1,0,0]]).unsqueeze(0)
+W = torch.FloatTensor([[1,0,1],[0,1,0],[1,0,1]]).unsqueeze(0)
+print('X=\n{}'.format(X))
+print('W=\n{}'.format(W))
+conv2d = Conv2D(1,(3,3))
+conv2d.W.data=W
+Y = conv2d(X)
+print('Y=\n{}'.format(Y))
+```
+输出结果为：
+
+```
+X=
+tensor([[[ 1.,  1.,  1.,  0.,  0.],
+         [ 0.,  1.,  1.,  1.,  0.],
+         [ 0.,  0.,  1.,  1.,  1.],
+         [ 0.,  0.,  1.,  1.,  0.],
+         [ 0.,  1.,  1.,  0.,  0.]]])
+W=
+tensor([[[ 1.,  0.,  1.],
+         [ 0.,  1.,  0.],
+         [ 1.,  0.,  1.]]])
+Y=
+tensor([[[[ 4.,  3.,  4.],
+          [ 2.,  4.,  3.],
+          [ 2.,  3.,  4.]]]])
+```
+以上我们采用了元素标量积求和形式的核（Kernel）做卷积。事实上，我们可以有各种各样的核。例如，我们可以用最大值，而非求和，我们也可以将一个其他的更复杂的神经网络来作为核。此外，我们还可以组合不同的尺寸的核等等。这很容易拓展。
 ### 1.3 卷积层运用和特点探讨
+接下来，我们来探讨卷积层的表达能力。作为对比，我们继续使用前一章节的翻译例子。我们只需将 RNN 替换成如下 CNN，然后进行优化，便可以得到其损失和BLEU随时间的变化曲线。以下是代码：
+
+
+结果对比图如下所示：
 ## 4. 采样层
 ### 1.1 什么是采样层
 ### 1.2 手把手构建一个采样层
